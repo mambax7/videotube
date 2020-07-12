@@ -1,0 +1,350 @@
+<style type='text/css' media='all'>
+  @import url(<{$block.videocss}>);
+</style>
+
+<table border="0" cellpadding="0" cellspacing="1" width="100%">
+  <tr>
+    <{foreach item=vid_disp from=$block.vp_vid_disp}>
+      <td class="playvideobackdrop" align="center" valign="middle">
+      <{if ($vid_disp.service == 10)}>
+        <{$vid_disp.modifiedfullembedcode}><br />
+        <div id="videodisplaymostviewed" style="width: <{$vid_disp.pwidth}>px; overflow: auto;"></div>
+      <{elseif ($vid_disp.service == 4)}>
+        <embed src="http://blip.tv/play/<{$vid_disp.embedcode}>" type="application/x-shockwave-flash" width="<{$vid_disp.pwidth}>" height="<{$vid_disp.pheight}>" allowscriptaccess="always" allowfullscreen="true"></embed><br />
+        <div id="videodisplaymostviewed" style="width: <{$vid_disp.pwidth}>px; overflow: auto;"></div>
+      <{elseif ($vid_disp.service == 3)}>
+	    <embed src="<{$vid_disp.embedcode}>" width="<{$vid_disp.pwidth}>" height="<{$vid_disp.pheight}>" wmode="transparent" pluginspage="http://www.macromedia.com/go/getflashplayer" flashVars="playerVars=autoPlay=no" type="application/x-shockwave-flash"></embed><br />
+	    <div id="videodisplaymostviewed" style="width: <{$vid_disp.pwidth}>px; overflow: auto;"></div>
+      <{elseif ($vid_disp.service == 2)}>
+        <object width="<{$vid_disp.pwidth}>" height="<{$vid_disp.pheight}>">
+	    <param name="movie" value="<{$vid_disp.embedcode}>&autoplay=0&related=1"></param>
+	    <param name="allowFullScreen" value="true"></param>
+	    <param name="allowScriptAccess" value="always"></param>
+	    <embed src="<{$vid_disp.embedcode}>&autoplay=0&related=1" 
+	      type="application/x-shockwave-flash" width="<{$vid_disp.pwidth}>" height="<{$vid_disp.pheight}>" 
+	      allowFullScreen="true" allowScriptAccess="always"></embed></object><br />
+	      <div id="videodisplaymostviewed" style="width: <{$vid_disp.pwidth}>px; overflow: auto;"></div>
+      <{else}>
+        <object width="<{$vid_disp.pwidth}>" height="<{$vid_disp.pheight}>">
+	    <param name="movie" value="http://www.youtube.com/v/<{$vid_disp.pcode}>&border=0&rel=1"></param>
+	    <param name="wmode" value="transparent"></param>
+	    <embed src="http://www.youtube.com/v/<{$vid_disp.pcode}>&border=0&rel=1&autoplay=0"
+        type="application/x-shockwave-flash" wmode="transparent" width="<{$vid_disp.pwidth}>" height="<{$vid_disp.pheight}>">
+	    </embed></object><br />
+	    <div id="videodisplaymostviewed" style="width: <{$vid_disp.pwidth}>px; overflow: auto;"></div>
+      <{/if}>
+      </td>
+    <{/foreach}>
+  </tr>
+</table>
+
+<{if $vid_disp.service == 10}>
+<script>
+    var mv_title = '<{$block.un_mv_videotitle}>';
+    var mv_localViews = '<{$block.un_mv_localviews}>';
+    var mv_submitter = '<{$block.un_mv_submitter}>';
+    var mv_vsubmitdate = '<{$block.un_mv_vsubmitdate}>';
+    
+    mv_title = cleanForJSMostViewed(mv_title);
+
+    displayLessInfoMostViewed();
+
+  function cleanForJSMostViewed(text) {
+
+    var vtext =  text.split("\'").join("&#39;");
+    var vtext =  vtext.split("\"").join("&#34;");
+    return vtext; 
+  }
+
+  function displayMoreInfoMostViewed() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayLessInfoMostViewed();" style="font-size: 9pt;"><{$block.lang_displayless}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$block.lang_videotitle}>:</b>&nbsp;', mv_title, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_localviews}>:</b></td><td class="videoinfoeven" align=left>', mv_localViews, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_localsubmitter}>:</b></td><td class="videoinfoeven" align=left>', mv_submitter, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_submitdate}>:</b></td><td class="videoinfoeven" align=left>', mv_vsubmitdate, '</td></tr>');
+    html.push('</table>');
+ 
+    document.getElementById("videodisplaymostviewed").innerHTML = html.join("");
+  }
+
+  function displayLessInfoMostViewed() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayMoreInfoMostViewed();" style="font-size: 9pt;"><{$block.lang_displaymore}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$block.lang_videotitle}>:</b> ', mv_title, '</td></tr>');
+    html.push('</table>');
+    
+    document.getElementById("videodisplaymostviewed").innerHTML = html.join("");
+  }    
+</script>
+
+<{elseif $vid_disp.service == 4}>
+
+<script>
+    var mv_title = '<{$block.bt_mv_videotitle}>';
+    var mv_durationmin;
+    var mv_durationsec;
+    var mv_duration;
+    var mv_btduration = <{$block.bt_mv_duration}>;
+    var mv_author = '<{$block.bt_mv_videoauthor}>';
+    var mv_btpublished = '<{$block.bt_mv_published}>';
+    var mv_btpublisheddate;
+     
+    var mv_localViews = '<{$block.bt_mv_localviews}>';
+    var mv_submitter = '<{$block.bt_mv_submitter}>';
+    var mv_vsubmitdate = '<{$block.bt_mv_vsubmitdate}>';
+    
+    mv_btpublished = mv_btpublished.split("+");
+    mv_btpublisheddate = mv_btpublished[0];
+    
+    mv_durationmin = Math.floor(mv_btduration/60);
+    mv_durationsec = mv_btduration - (mv_durationmin*60);
+    mv_duration = mv_durationmin+' min '+mv_durationsec+' sec';
+
+    mv_title = cleanForJSMostViewed(mv_title);
+
+    displayLessInfoMostViewed();
+
+  function cleanForJSMostViewed(text) {
+
+    var vtext =  text.split("\'").join("&#39;");
+    var vtext =  vtext.split("\"").join("&#34;");
+    return vtext; 
+  }
+
+  function displayMoreInfoMostViewed() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayLessInfoMostViewed();" style="font-size: 9pt;"><{$block.lang_displayless}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$block.lang_videotitle}>:</b>&nbsp;', mv_title, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_localviews}>:</b></td><td class="videoinfoeven" align=left>', mv_localViews, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_localsubmitter}>:</b></td><td class="videoinfoeven" align=left>', mv_submitter, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_duration}>:</b></td><td class="videoinfoeven" align=left>', mv_duration, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_submitdate}>:</b></td><td class="videoinfoeven" align=left>', mv_vsubmitdate, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_author}>:</b></td><td class="videoinfoeven" align=left>', mv_author, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_pubdate}>:</b></td><td class="videoinfoeven" align=left>', mv_btpublisheddate, '</td></tr>');
+    html.push('</table>');
+ 
+    document.getElementById("videodisplaymostviewed").innerHTML = html.join("");
+  }
+
+  function displayLessInfoMostViewed() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayMoreInfoMostViewed();" style="font-size: 9pt;"><{$block.lang_displaymore}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$block.lang_videotitle}>:</b> ', mv_title, '</td></tr>');
+    html.push('</table>');
+    
+    document.getElementById("videodisplaymostviewed").innerHTML = html.join("");
+  }    
+</script>
+
+<{elseif $vid_disp.service == 3}>
+<script>
+    var mv_title = '<{$block.mc_mv_videotitle}>';
+    var mv_durationmin;
+    var mv_durationsec;
+    var mv_duration;
+    var mv_mcduration = <{$block.mc_mv_duration}>;
+    var mv_author = '<{$block.mc_mv_videoauthor}>';
+    var mv_mcviews = '<{$block.mc_mv_videoviews}>';
+    var mv_mcpublished = '<{$block.mc_mv_published}>';
+    var mv_mcpublisheddate;
+     
+    var mv_localViews = '<{$block.mc_mv_localviews}>';
+    var mv_submitter = '<{$block.mc_mv_submitter}>';
+    var mv_vsubmitdate = '<{$block.mc_mv_vsubmitdate}>';
+    
+    mv_mcpublished = mv_mcpublished.split("+");
+    mv_mcpublisheddate = mv_mcpublished[0].substr(0,16);
+    
+    mv_durationmin = Math.floor(mv_mcduration/60);
+    mv_durationsec = mv_mcduration - (mv_durationmin*60);
+    mv_duration = mv_durationmin+' min '+mv_durationsec+' sec';
+
+    mv_title = cleanForJSMostViewed(mv_title);
+
+    displayLessInfoMostViewed();
+
+  function cleanForJSMostViewed(text) {
+
+    var vtext =  text.split("\'").join("&#39;");
+    var vtext =  vtext.split("\"").join("&#34;");
+    return vtext; 
+  }
+
+  function displayMoreInfoMostViewed() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayLessInfoMostViewed();" style="font-size: 9pt;"><{$block.lang_displayless}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$block.lang_videotitle}>:</b> ', mv_title, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_localviews}>:</b></td><td class="videoinfoeven" align=left>', mv_localViews, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_localsubmitter}>:</b></td><td class="videoinfoeven" align=left>', mv_submitter, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_duration}>:</b></td><td class="videoinfoeven" align=left>', mv_duration, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_submitdate}>:</b></td><td class="videoinfoeven" align=left>', mv_vsubmitdate, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_totviews}>:</b></td><td class="videoinfoeven" align=left>', mv_mcviews, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_author}>:</b></td><td class="videoinfoeven" align=left>', mv_author, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_pubdate}>:</b></td><td class="videoinfoeven" align=left>', mv_mcpublisheddate, '</td></tr>');
+    html.push('</table>');
+ 
+    document.getElementById("videodisplaymostviewed").innerHTML = html.join("");
+  }
+
+  function displayLessInfoMostViewed() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayMoreInfoMostViewed();" style="font-size: 9pt;"><{$block.lang_displaymore}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$block.lang_videotitle}>:</b> ', mv_title, '</td></tr>');
+    html.push('</table>');
+    
+    document.getElementById("videodisplaymostviewed").innerHTML = html.join("");
+  }    
+</script>
+<{elseif $vid_disp.service == 2}>
+
+<script>
+    var mv_title = '<{$block.dm_mv_videotitle}>';
+    var mv_durationmin;
+    var mv_durationsec;
+    var mv_duration;
+    var mv_dmduration = <{$block.dm_mv_duration}>;
+    var mv_author = '<{$block.dm_mv_videoauthor}>';
+    var mv_dmviews = '<{$block.dm_mv_videoviews}>';
+    var mv_dmpublished = '<{$block.dm_mv_published}>';
+    var mv_dmpublisheddate;
+    var mv_dmpublishedtime;
+  
+    var mv_localViews = '<{$block.dm_mv_localviews}>';
+    var mv_submitter = '<{$block.dm_mv_submitter}>';
+    var mv_vsubmitdate = '<{$block.dm_mv_vsubmitdate}>';
+
+    mv_dmpublished = mv_dmpublished.split("+");
+    mv_dmpublisheddate = mv_dmpublished[0].substr(0,16);;
+
+    mv_durationmin = Math.floor(mv_dmduration/60);
+    mv_durationsec = mv_dmduration - (mv_durationmin*60);
+    mv_duration = mv_durationmin+' min '+mv_durationsec+' sec';
+
+    mv_title = cleanForJSMostViewed(mv_title);
+
+    displayLessInfoMostViewed();
+
+  function cleanForJSMostViewed(text) {
+
+    var vtext =  text.split("\'").join("&#39;");
+    var vtext =  vtext.split("\"").join("&#34;");
+    return vtext; 
+  }
+
+  function displayMoreInfoMostViewed() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayLessInfoMostViewed();" style="font-size: 9pt;"><{$block.lang_displayless}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$block.lang_videotitle}>:</b> ', mv_title, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_localviews}>:</b></td><td class="videoinfoeven" align=left>', mv_localViews, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_localsubmitter}>:</b></td><td class="videoinfoeven" align=left>', mv_submitter, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_duration}>:</b></td><td class="videoinfoeven" align=left>', mv_duration, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_submitdate}>:</b></td><td class="videoinfoeven" align=left>', mv_vsubmitdate, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_totviews}>:</b></td><td class="videoinfoeven" align=left>', mv_dmviews, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_author}>:</b></td><td class="videoinfoeven" align=left>', mv_author, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_pubdate}>:</b></td><td class="videoinfoeven" align=left>', mv_dmpublisheddate, '</td></tr>');
+    html.push('</table>');
+ 
+    document.getElementById("videodisplaymostviewed").innerHTML = html.join("");
+  }
+
+  function displayLessInfoMostViewed() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayMoreInfoMostViewed();" style="font-size: 9pt;"><{$block.lang_displaymore}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$block.lang_videotitle}>:</b> ', mv_title, '</td></tr>');
+    html.push('</table>');
+    
+    document.getElementById("videodisplaymostviewed").innerHTML = html.join("");
+  }    
+</script>
+<{else}>
+<script>
+    var mv_title;
+    var mv_youtubeduration;
+    var mv_durationmin;
+    var mv_durationsec;
+    var mv_duration;
+    var mv_author;
+    var mv_ytviews;
+    var mv_youtubepublished;
+    var mv_youtubepublisheddate;
+    var mv_localViews;
+    var mv_submitter;
+    var mv_vsubmitdate;
+
+  function cleanForJSMostViewed(text) {
+
+    var vtext =  text.split("\'").join("&#39;");
+    var vtext =  vtext.split("\"").join("&#34;");
+    return vtext; 
+  }
+
+  function showVideoInfoMostViewed(json) {
+
+    mv_title = cleanForJSMostViewed(json.entry['media$group']['media$title'].$t);
+    mv_youtubeduration = json.entry['media$group']['yt$duration'].seconds;
+    mv_durationmin = Math.floor(mv_youtubeduration/60);
+    mv_durationsec = mv_youtubeduration - (mv_durationmin*60);
+    mv_duration = mv_durationmin+' min '+mv_durationsec+' sec';
+    mv_author = cleanForJSMostViewed(json.entry['author'][0].name.$t);
+    mv_ytviews = json.entry['yt$statistics'].viewCount;
+    mv_youtubepublished = json.entry.published.$t;
+    mv_youtubepublished = mv_youtubepublished.split("T");
+    mv_youtubepublisheddate = mv_youtubepublished[0];
+  
+    mv_localViews = '<{$vid_disp.views}>';
+    mv_submitter = cleanForJSMostViewed('<{$vid_disp.submitter}>');
+    mv_vsubmitdate = '<{$vid_disp.date}>';
+    
+    displayLessInfoMostViewed();
+  }
+
+  function displayMoreInfoMostViewed() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayLessInfoMostViewed();" style="font-size: 9pt;"><{$block.lang_displayless}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$block.lang_videotitle}>:</b> ', mv_title, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_localviews}>:</b></td><td class="videoinfoeven" align=left>', mv_localViews, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_localsubmitter}>:</b></td><td class="videoinfoeven" align=left>', mv_submitter, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_duration}>:</b></td><td class="videoinfoeven" align=left>', mv_duration, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_submitdate}>:</b></td><td class="videoinfoeven" align=left>', mv_vsubmitdate, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_totviews}>:</b></td><td class="videoinfoeven" align=left>', mv_ytviews, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_author}>:</b></td><td class="videoinfoeven" align=left>', mv_author, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_pubdate}>:</b></td><td class="videoinfoeven" align=left>', mv_youtubepublisheddate, '</td></tr>');
+    html.push('</table>');
+ 
+    document.getElementById("videodisplaymostviewed").innerHTML = html.join("");
+  }
+
+  function displayLessInfoMostViewed() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayMoreInfoMostViewed();" style="font-size: 9pt;"><{$block.lang_displaymore}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$block.lang_videotitle}>:</b> ', mv_title, '</td></tr>');
+    html.push('</table>');
+    
+    document.getElementById("videodisplaymostviewed").innerHTML = html.join("");
+  }
+
+</script>
+<script src="http://gdata.youtube.com/feeds/api/videos/<{$vid_disp.pcode}>?alt=json-in-script&callback=showVideoInfoMostViewed">
+</script>
+<{/if}>

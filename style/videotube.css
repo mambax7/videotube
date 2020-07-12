@@ -1,0 +1,57 @@
+/* Video information display table */
+.videowalltable {
+	background-color : #000000; 
+	border: 1px solid #ffffff;
+	cellspacing: 1px;
+	cellpadding: 0px;
+}
+/* Video information display table */
+.videoinfotable {
+	background-color : #bbbbbb; 
+	border: 1px solid #000000;
+	cellspacing: 0px;
+	cellpadding: 0px;
+	padding-left: 5px;
+}
+/* Background Play Video Block */
+.playvideobackdrop {
+	background-color : transparent; 
+}
+/* Table cell containing Display More/Less button */
+.videoinfobutton {
+	background-color : transparent;
+}
+/* Table cell containing video title */
+.videoinfohead {
+	background-color : #eeeeee;
+	color: #000000;
+}
+/* Table cell background */
+.videoinfoodd {
+	background-color : #cccccc;
+	color: #000000;
+}
+/* Table cell background */
+.videoinfoeven {
+	background-color : #dddddd;
+	color: #000000;
+}
+/* Video Thumbnail Blocks */
+.blockthumbnailtable {
+	width: 100%;
+	cellspacing: 0px;
+	cellpadding: 0px;
+	border-width: 0px;
+}
+.blockthumbnailbackdrop {
+	background-color : transparent;
+	color:#000000;
+	border-width: 0px;
+}
+.blockthumbnailbackdrop a {
+	color:#000080 
+}
+.blockthumbnailbackdrop a:hover {
+	color:#ffffff;
+	background-color : #0000ff;
+}

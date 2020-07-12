@@ -1,0 +1,350 @@
+<style type='text/css' media='all'>
+  @import url(<{$block.videocss}>);
+</style>
+
+<table border="0" cellpadding="0" cellspacing="1" width="100%">
+  <tr>
+    <{foreach item=vid_disp from=$block.vp_vid_disp}>
+      <td class="playvideobackdrop" align="center" valign="middle">
+      <{if ($vid_disp.service == 10)}>
+        <{$vid_disp.modifiedfullembedcode}><br />
+        <div id="videodisplayrandom" style="width: <{$vid_disp.pwidth}>px; overflow: auto;"></div>
+      <{elseif ($vid_disp.service == 4)}>
+        <embed src="http://blip.tv/play/<{$vid_disp.embedcode}>" type="application/x-shockwave-flash" width="<{$vid_disp.pwidth}>" height="<{$vid_disp.pheight}>" allowscriptaccess="always" allowfullscreen="true"></embed><br />
+        <div id="videodisplayrandom" style="width: <{$vid_disp.pwidth}>px; overflow: auto;"></div>
+      <{elseif ($vid_disp.service == 3)}>
+	    <embed src="<{$vid_disp.embedcode}>" width="<{$vid_disp.pwidth}>" height="<{$vid_disp.pheight}>" wmode="transparent" pluginspage="http://www.macromedia.com/go/getflashplayer" flashVars="playerVars=autoPlay=no" type="application/x-shockwave-flash"></embed><br />
+	    <div id="videodisplayrandom" style="width: <{$vid_disp.pwidth}>px; overflow: auto;"></div>
+      <{elseif ($vid_disp.service == 2)}>
+        <object width="<{$vid_disp.pwidth}>" height="<{$vid_disp.pheight}>">
+	    <param name="movie" value="<{$vid_disp.embedcode}>&autoplay=0&related=1"></param>
+	    <param name="allowFullScreen" value="true"></param>
+	    <param name="allowScriptAccess" value="always"></param>
+	    <embed src="<{$vid_disp.embedcode}>&autoplay=0&related=1" 
+	      type="application/x-shockwave-flash" width="<{$vid_disp.pwidth}>" height="<{$vid_disp.pheight}>" 
+	      allowFullScreen="true" allowScriptAccess="always"></embed></object><br />
+	      <div id="videodisplayrandom" style="width: <{$vid_disp.pwidth}>px; overflow: auto;"></div>
+      <{else}>
+        <object width="<{$vid_disp.pwidth}>" height="<{$vid_disp.pheight}>">
+	    <param name="movie" value="http://www.youtube.com/v/<{$vid_disp.pcode}>&border=0&rel=1"></param>
+	    <param name="wmode" value="transparent"></param>
+	    <embed src="http://www.youtube.com/v/<{$vid_disp.pcode}>&border=0&rel=1&autoplay=0"
+        type="application/x-shockwave-flash" wmode="transparent" width="<{$vid_disp.pwidth}>" height="<{$vid_disp.pheight}>">
+	    </embed></object><br />
+	    <div id="videodisplayrandom" style="width: <{$vid_disp.pwidth}>px; overflow: auto;"></div>
+      <{/if}>
+      </td>
+    <{/foreach}>
+  </tr>
+</table>
+
+<{if $vid_disp.service == 10}>
+<script>
+    var rd_title = '<{$block.un_rd_videotitle}>';
+    var rd_localViews = '<{$block.un_rd_localviews}>';
+    var rd_submitter = '<{$block.un_rd_submitter}>';
+    var rd_vsubmitdate = '<{$block.un_rd_vsubmitdate}>';
+    
+    rd_title = cleanForJSRandom(rd_title);
+
+    displayLessInfoRandom();
+
+  function cleanForJSRandom(text) {
+
+    var vtext =  text.split("\'").join("&#39;");
+    var vtext =  vtext.split("\"").join("&#34;");
+    return vtext; 
+  }
+
+  function displayMoreInfoRandom() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayLessInfoRandom();" style="font-size: 9pt;"><{$block.lang_displayless}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$block.lang_videotitle}>:</b>&nbsp;', rd_title, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_localviews}>:</b></td><td class="videoinfoeven" align=left>', rd_localViews, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_localsubmitter}>:</b></td><td class="videoinfoeven" align=left>', rd_submitter, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_submitdate}>:</b></td><td class="videoinfoeven" align=left>', rd_vsubmitdate, '</td></tr>');
+    html.push('</table>');
+ 
+    document.getElementById("videodisplayrandom").innerHTML = html.join("");
+  }
+
+  function displayLessInfoRandom() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayMoreInfoRandom();" style="font-size: 9pt;"><{$block.lang_displaymore}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$block.lang_videotitle}>:</b> ', rd_title, '</td></tr>');
+    html.push('</table>');
+    
+    document.getElementById("videodisplayrandom").innerHTML = html.join("");
+  }    
+</script>
+
+<{elseif $vid_disp.service == 4}>
+
+<script>
+    var rd_title = '<{$block.bt_rd_videotitle}>';
+    var rd_durationmin;
+    var rd_durationsec;
+    var rd_duration;
+    var rd_btduration = <{$block.bt_rd_duration}>;
+    var rd_author = '<{$block.bt_rd_videoauthor}>';
+    var rd_btpublished = '<{$block.bt_rd_published}>';
+    var rd_btpublisheddate;
+     
+    var rd_localViews = '<{$block.bt_rd_localviews}>';
+    var rd_submitter = '<{$block.bt_rd_submitter}>';
+    var rd_vsubmitdate = '<{$block.bt_rd_vsubmitdate}>';
+    
+    rd_btpublished = rd_btpublished.split("+");
+    rd_btpublisheddate = rd_btpublished[0];
+    
+    rd_durationmin = Math.floor(rd_btduration/60);
+    rd_durationsec = rd_btduration - (rd_durationmin*60);
+    rd_duration = rd_durationmin+' min '+rd_durationsec+' sec';
+
+    rd_title = cleanForJSRandom(rd_title);
+
+    displayLessInfoRandom();
+
+  function cleanForJSRandom(text) {
+
+    var vtext =  text.split("\'").join("&#39;");
+    var vtext =  vtext.split("\"").join("&#34;");
+    return vtext; 
+  }
+
+  function displayMoreInfoRandom() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayLessInfoRandom();" style="font-size: 9pt;"><{$block.lang_displayless}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$block.lang_videotitle}>:</b>&nbsp;', rd_title, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_localviews}>:</b></td><td class="videoinfoeven" align=left>', rd_localViews, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_localsubmitter}>:</b></td><td class="videoinfoeven" align=left>', rd_submitter, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_duration}>:</b></td><td class="videoinfoeven" align=left>', rd_duration, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_submitdate}>:</b></td><td class="videoinfoeven" align=left>', rd_vsubmitdate, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_author}>:</b></td><td class="videoinfoeven" align=left>', rd_author, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_pubdate}>:</b></td><td class="videoinfoeven" align=left>', rd_btpublisheddate, '</td></tr>');
+    html.push('</table>');
+ 
+    document.getElementById("videodisplayrandom").innerHTML = html.join("");
+  }
+
+  function displayLessInfoRandom() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayMoreInfoRandom();" style="font-size: 9pt;"><{$block.lang_displaymore}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$block.lang_videotitle}>:</b> ', rd_title, '</td></tr>');
+    html.push('</table>');
+    
+    document.getElementById("videodisplayrandom").innerHTML = html.join("");
+  }    
+</script>
+
+<{elseif $vid_disp.service == 3}>
+<script>
+    var rd_title = '<{$block.mc_rd_videotitle}>';
+    var rd_durationmin;
+    var rd_durationsec;
+    var rd_duration;
+    var rd_mcduration = <{$block.mc_rd_duration}>;
+    var rd_author = '<{$block.mc_rd_videoauthor}>';
+    var rd_mcviews = '<{$block.mc_rd_videoviews}>';
+    var rd_mcpublished = '<{$block.mc_rd_published}>';
+    var rd_mcpublisheddate;
+     
+    var rd_localViews = '<{$block.mc_rd_localviews}>';
+    var rd_submitter = '<{$block.mc_rd_submitter}>';
+    var rd_vsubmitdate = '<{$block.mc_rd_vsubmitdate}>';
+    
+    rd_mcpublished = rd_mcpublished.split("+");
+    rd_mcpublisheddate = rd_mcpublished[0].substr(0,16);
+    
+    rd_durationmin = Math.floor(rd_mcduration/60);
+    rd_durationsec = rd_mcduration - (rd_durationmin*60);
+    rd_duration = rd_durationmin+' min '+rd_durationsec+' sec';
+
+    rd_title = cleanForJSRandom(rd_title);
+
+    displayLessInfoRandom();
+
+  function cleanForJSRandom(text) {
+
+    var vtext =  text.split("\'").join("&#39;");
+    var vtext =  vtext.split("\"").join("&#34;");
+    return vtext; 
+  }
+
+  function displayMoreInfoRandom() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayLessInfoRandom();" style="font-size: 9pt;"><{$block.lang_displayless}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$block.lang_videotitle}>:</b> ', rd_title, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_localviews}>:</b></td><td class="videoinfoeven" align=left>', rd_localViews, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_localsubmitter}>:</b></td><td class="videoinfoeven" align=left>', rd_submitter, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_duration}>:</b></td><td class="videoinfoeven" align=left>', rd_duration, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_submitdate}>:</b></td><td class="videoinfoeven" align=left>', rd_vsubmitdate, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_totviews}>:</b></td><td class="videoinfoeven" align=left>', rd_mcviews, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_author}>:</b></td><td class="videoinfoeven" align=left>', rd_author, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_pubdate}>:</b></td><td class="videoinfoeven" align=left>', rd_mcpublisheddate, '</td></tr>');
+    html.push('</table>');
+ 
+    document.getElementById("videodisplayrandom").innerHTML = html.join("");
+  }
+
+  function displayLessInfoRandom() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayMoreInfoRandom();" style="font-size: 9pt;"><{$block.lang_displaymore}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$block.lang_videotitle}>:</b> ', rd_title, '</td></tr>');
+    html.push('</table>');
+    
+    document.getElementById("videodisplayrandom").innerHTML = html.join("");
+  }    
+</script>
+<{elseif $vid_disp.service == 2}>
+<script>
+    var rd_title = '<{$block.dm_rd_videotitle}>';
+    var rd_durationmin;
+    var rd_durationsec;
+    var rd_duration;
+    var rd_dmduration = <{$block.dm_rd_duration}>;
+    var rd_author = '<{$block.dm_rd_videoauthor}>';
+    var rd_dmviews = '<{$block.dm_rd_videoviews}>';
+    var rd_dmpublished = '<{$block.dm_rd_published}>';
+    var rd_dmpublisheddate;
+  
+    var rd_localViews = '<{$block.dm_rd_localviews}>';
+    var rd_submitter = '<{$block.dm_rd_submitter}>';
+    var rd_vsubmitdate = '<{$block.dm_rd_vsubmitdate}>';
+
+    rd_dmpublished = rd_dmpublished.split("+");
+    rd_dmpublisheddate = rd_dmpublished[0].substr(0,16);
+
+    rd_durationmin = Math.floor(rd_dmduration/60);
+    rd_durationsec = rd_dmduration - (rd_durationmin*60);
+    rd_duration = rd_durationmin+' min '+rd_durationsec+' sec';
+
+    rd_title = cleanForJSRandom(rd_title);
+
+    displayLessInfoRandom();
+
+  function cleanForJSRandom(text) {
+
+    var vtext =  text.split("\'").join("&#39;");
+    var vtext =  vtext.split("\"").join("&#34;");
+    return vtext; 
+  }
+
+  function displayMoreInfoRandom() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayLessInfoRandom();" style="font-size: 9pt;"><{$block.lang_displayless}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$block.lang_videotitle}>:</b> ', rd_title, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_localviews}>:</b></td><td class="videoinfoeven" align=left>', rd_localViews, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_localsubmitter}>:</b></td><td class="videoinfoeven" align=left>', rd_submitter, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_duration}>:</b></td><td class="videoinfoeven" align=left>', rd_duration, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_submitdate}>:</b></td><td class="videoinfoeven" align=left>', rd_vsubmitdate, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_totviews}>:</b></td><td class="videoinfoeven" align=left>', rd_dmviews, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_author}>:</b></td><td class="videoinfoeven" align=left>', rd_author, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_pubdate}>:</b></td><td class="videoinfoeven" align=left>', rd_dmpublisheddate, '</td></tr>');
+    html.push('</table>');
+ 
+    document.getElementById("videodisplayrandom").innerHTML = html.join("");
+  }
+
+  function displayLessInfoRandom() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayMoreInfoRandom();" style="font-size: 9pt;"><{$block.lang_displaymore}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$block.lang_videotitle}>:</b> ', rd_title, '</td></tr>');
+    html.push('</table>');
+    
+    document.getElementById("videodisplayrandom").innerHTML = html.join("");
+  }    
+</script>
+
+
+<{else}>
+<script>
+    var rd_title;
+    var rd_youtubeduration;
+    var rd_durationmin;
+    var rd_durationsec;
+    var rd_duration;
+    var rd_author;
+    var rd_ytviews;
+    var rd_youtubepublished;
+    var rd_youtubepublisheddate;
+    var rd_localViews;
+    var rd_submitter;
+    var rd_vsubmitdate;
+
+  function cleanForJSRandom(text) {
+
+    var vtext =  text.split("\'").join("&#39;");
+    var vtext =  vtext.split("\"").join("&#34;");
+    return vtext; 
+  }
+
+  function showVideoInfoRandom(json) {
+
+    rd_title = cleanForJSRandom(json.entry['media$group']['media$title'].$t);
+    rd_youtubeduration = json.entry['media$group']['yt$duration'].seconds;
+    rd_durationmin = Math.floor(rd_youtubeduration/60);
+    rd_durationsec = rd_youtubeduration - (rd_durationmin*60);
+    rd_duration = rd_durationmin+' min '+rd_durationsec+' sec';
+    rd_author = cleanForJSRandom(json.entry['author'][0].name.$t);
+    rd_ytviews = json.entry['yt$statistics'].viewCount;
+    rd_youtubepublished = json.entry.published.$t;
+    rd_youtubepublished = rd_youtubepublished.split("T");
+    rd_youtubepublisheddate = rd_youtubepublished[0];
+  
+    rd_localViews = '<{$vid_disp.views}>';
+    rd_submitter = cleanForJSRandom('<{$vid_disp.submitter}>');
+    rd_vsubmitdate = '<{$vid_disp.date}>';
+    
+    displayLessInfoRandom();
+  }
+
+  function displayMoreInfoRandom() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayLessInfoRandom();" style="font-size: 9pt;"><{$block.lang_displayless}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$block.lang_videotitle}>:</b> ', rd_title, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_localviews}>:</b></td><td class="videoinfoeven" align=left>', rd_localViews, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_localsubmitter}>:</b></td><td class="videoinfoeven" align=left>', rd_submitter, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_duration}>:</b></td><td class="videoinfoeven" align=left>', rd_duration, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_submitdate}>:</b></td><td class="videoinfoeven" align=left>', rd_vsubmitdate, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_totviews}>:</b></td><td class="videoinfoeven" align=left>', rd_ytviews, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_author}>:</b></td><td class="videoinfoeven" align=left>', rd_author, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_pubdate}>:</b></td><td class="videoinfoeven" align=left>', rd_youtubepublisheddate, '</td></tr>');
+    html.push('</table>');
+ 
+    document.getElementById("videodisplayrandom").innerHTML = html.join("");
+  }
+
+  function displayLessInfoRandom() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayMoreInfoRandom();" style="font-size: 9pt;"><{$block.lang_displaymore}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$block.lang_videotitle}>:</b> ', rd_title, '</td></tr>');
+    html.push('</table>');
+    
+    document.getElementById("videodisplayrandom").innerHTML = html.join("");
+  }
+
+</script>
+<script src="http://gdata.youtube.com/feeds/api/videos/<{$vid_disp.pcode}>?alt=json-in-script&callback=showVideoInfoRandom">
+</script>
+<{/if}>

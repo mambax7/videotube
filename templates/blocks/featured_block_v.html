@@ -1,0 +1,31 @@
+<style type='text/css' media='all'>
+  @import url(<{$block.videocss}>);
+</style>
+
+<table class="blockthumbnailtable">
+		
+		<{foreach item=vid_disp from=$block.vp_vid_disp}>
+			<tr><td class="blockthumbnailbackdrop" align="center" valign="middle">
+				<a href="<{$xoops_url}>/modules/videotube/index.php?vid=<{$vid_disp.id}>">
+    <{if $vid_disp.service>1}>
+      <{if $vid_disp.thumb}>
+        <img src="<{$vid_disp.thumb}>" width=130px alt="<{$block.lang_submitted}> <{$vid_disp.submitter}> <{$block.lang_on}> <{$vid_disp.date}> <{$block.lang_at}> <{$vid_disp.time}>"><br />
+      <{else}>
+        <img src="<{$xoops_url}>/modules/videotube/images/defaultthumb.jpg" width=130px alt="<{$block.lang_submitted}> <{$vid_disp.submitter}> <{$block.lang_on}> <{$vid_disp.date}> <{$block.lang_at}> <{$vid_disp.time}>"><br />
+      <{/if}>      
+  <{else}>
+      <img src="http://img.youtube.com/vi/<{$vid_disp.code}>/default.jpg" width=130px alt="<{$block.lang_submitted}> <{$vid_disp.submitter}> <{$block.lang_on}> <{$vid_disp.date}> <{$block.lang_at}> <{$vid_disp.time}>"><br />
+    <{/if}>
+    <font face="Arial" style="font-size: 9pt">
+    <{$vid_disp.title}></a><br />
+	<{if ($vid_disp.artist)}>
+	  <{$vid_disp.artist}><br />
+	<{/if}>
+    <{$block.lang_views}>  <{$vid_disp.views}><br />
+    <{if ($vid_disp.servicename)}>
+      **<{$vid_disp.servicename}>**
+    <{/if}>
+			</td></tr>
+		<{/foreach}>
+		
+</table>

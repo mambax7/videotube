@@ -1,0 +1,1226 @@
+<style type='text/css' media='all'>
+  @import url(<{$videocss}>);
+</style>
+
+<{if $vpagemenuenable}>
+  <div align=center>
+  <table><tr><td width="100%" class="odd" style="border: 1px solid #000000"><{$video_pagemenu}></td></tr></table>
+  </div>
+<{/if}>
+<{if $vcattype && $vusecats && !$sid && $numcategories}>
+  <div align=center>                  
+  <table><tr><td width="100%" align="left" class="even" style="border: 1px solid #000000"><b><{$category_path}></b></td></tr></table>
+  <{if $catcount}>
+    <table><tr><td>
+      <fieldset>
+        <legend  style="color: #aaaaaa;"><b><i><{$lang_catlist}></i></b></legend>
+        <div align= "left" style="margin-left: 5px; padding: 0px;">
+          <table width="80%">
+            <tr>
+              <{foreach item=subcat from=$subcategories}>
+          	    <td valign="middle" width="35%">
+                <a href="index.php?cid=<{$subcat.id}>"><b><{$subcat.title}></b></a>&nbsp;(<{$subcat.totallinks}>)
+            	<{if $subcat.infercategories}>
+		          <div style="margin-bottom: 3px; margin-left: 16px;"><small><{$subcat.infercategories}></small></div>
+                <{/if}>
+	            </td>
+	            <{if $subcat.count is div by $vcattypecolumns}>
+                  </tr><tr>
+                <{/if}>
+              <{/foreach}>
+            </tr>
+          </table>    
+        </div>
+      </fieldset>
+    </td></tr></table>
+  <{/if}>              
+  </div>
+<{/if}>
+
+<div align="center">
+<table cellpadding="5" cellspacing="5">
+  <tr>
+    <td colspan="<{$displaycolumns}>">
+      <table>
+        <tr>
+	      <{if $vusecats && !$sid && $numcategories > 0 && $vcattype == 0}>
+            <td align="left">
+            <b><i><{$lang_catsel}></i></b>&nbsp;
+            <{$categorylist->render()}>
+            </td>
+          <{else}>
+            <td align="left">&nbsp;</td>
+          <{/if}>
+          <{if $video_page_nav}>
+		      <td align="right" width="50%"><b><i><{$lang_pagesel}></i></b> <{$video_page_nav}></td>
+          <{else}>
+              <td align="right">&nbsp;</td>
+          <{/if}>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+<{if $zerovideoview}>  
+  <{if $$vusecats}>
+    <tr><td align="center" valign="center"><h4><{$lang_pleaseselect}></h4></td></tr>
+  <{else}>
+    <tr><td align="center" valign="center"><h4><{$lang_novideosfound}></h4></td></tr>
+  <{/if}>  
+<{/if}>
+
+<{if $singlevideoview && !$zerovideoview}>  
+  <tr>
+  <{foreach item=playvideo from=$playvideo}>
+	  <td align="center" valign="center">
+      <div style="width: <{$playvideo.pwidth}>px;"><table class="videoinfotable"><tr>
+        <td class="videobuttons" align="left"><button onClick="javascript:openWithSelfMain('<{$xoops_url}>/modules/videotube/reportvideopopup.php?op=generateform&vid=<{$playvideo.pref}>','ReportTag',400,300);" style="font-size: 9pt;"><{$lang_reportbutton}></button></td>
+        <td class="videobuttons" align="right"><button onclick="javascript:location.href='mailto:?subject=<{$mail_subject}>&body=<{$mail_body}>'" style="font-size: 9pt;"><{$lang_recommendbutton}></button></td>
+      </tr></table></div>
+	  <{if $playvideo.service==10}>
+          <{$playvideo.fullembedcode}>
+      <{elseif $playvideo.service==4}>
+	    <{if $vautoplay || $vselected}>
+          <embed src="http://blip.tv/play/<{$playvideo.embedcode}>" type="application/x-shockwave-flash" width="400" height="338" allowscriptaccess="always" allowfullscreen="true" autostart="true"></embed>
+        <{else}>
+          <embed src="http://blip.tv/play/<{$playvideo.embedcode}>" type="application/x-shockwave-flash" width="400" height="338" allowscriptaccess="always" allowfullscreen="true" autostart="false"></embed>
+        <{/if}>
+	  <{elseif $playvideo.service==3}>
+	    <{if $vautoplay || $vselected}>
+	      <embed src="<{$playvideo.embedcode}>" width="400" height="345" wmode="transparent" pluginspage="http://www.macromedia.com/go/getflashplayer" flashVars="playerVars=autoPlay=yes" type="application/x-shockwave-flash"></embed>
+	    <{else}>
+	      <embed src="<{$playvideo.embedcode}>" width="400" height="345" wmode="transparent" pluginspage="http://www.macromedia.com/go/getflashplayer" flashVars="playerVars=autoPlay=no" type="application/x-shockwave-flash"></embed>
+        <{/if}>
+	  <{elseif $playvideo.service==2}>
+
+	    <{if $vautoplay || $vselected}>
+	      <object width="420" height="257">
+	      <param name="movie" value="<{$playvideo.embedcode}>&autoplay=1&related=1"></param>
+	      <param name="allowFullScreen" value="true"></param>
+	      <param name="allowScriptAccess" value="always"></param>
+	      <embed src="<{$playvideo.embedcode}>&autoplay=1&related=1" 
+	        type="application/x-shockwave-flash" width="420" height="257" 
+	        allowFullScreen="true" allowScriptAccess="always"></embed></object>
+	    <{else}>
+	      <object width="420" height="257">
+	      <param name="movie" value="<{$playvideo.embedcode}>&autoplay=0&related=1"></param>
+	      <param name="allowFullScreen" value="true"></param>
+	      <param name="allowScriptAccess" value="always"></param>
+	      <embed src="<{$playvideo.embedcode}>&autoplay=0&related=1" 
+	        type="application/x-shockwave-flash" width="420" height="257" 
+	        allowFullScreen="true" allowScriptAccess="always"></embed></object>
+        <{/if}>
+	  <{else}>
+
+	  <object width="<{$playvideo.pwidth}>" height="<{$playvideo.pheight}>">
+	  
+	  <{if $vuseborder}>
+	    <param name="movie" value="http://www.youtube.com/v/<{$playvideo.pcode}>&color1=0x<{$vpricolor}>&color2=0x<{$vseccolor}>&border=1&rel=1"></param>
+	  <{else}>
+	    <param name="movie" value="http://www.youtube.com/v/<{$playvideo.pcode}>&border=0&rel=1"></param>
+	  <{/if}>
+	  
+	  <param name="wmode" value="transparent"></param>
+	  
+	  <{if $vautoplay || $vselected}>
+	    <{if $vuseborder}>
+          <embed src="http://www.youtube.com/v/<{$playvideo.pcode}>&color1=0x<{$vpricolor}>&color2=0x<{$vseccolor}>&border=1&rel=1&autoplay=1"
+        <{else}>	  
+	  	  <embed src="http://www.youtube.com/v/<{$playvideo.pcode}>&border=0&rel=1&autoplay=1"
+	    <{/if}>
+	  <{else}>
+	    <{if $vuseborder}>
+          <embed src="http://www.youtube.com/v/<{$playvideo.pcode}>&color1=0x<{$vpricolor}>&color2=0x<{$vseccolor}>&border=1&rel=1&autoplay=0"
+        <{else}>	  
+          <embed src="http://www.youtube.com/v/<{$playvideo.pcode}>&border=0&rel=1&autoplay=0"
+	    <{/if}>
+	  <{/if}> 
+
+	  type="application/x-shockwave-flash" wmode="transparent" width="<{$playvideo.pwidth}>" height="<{$playvideo.pheight}>">
+	  </embed></object><br />
+	  <{/if}>
+	  <div id="videoinfodisplay" style="width: <{$playvideo.pwidth}>px; overflow: auto;"></div>
+	  </td>
+  <{/foreach}>
+  </tr>
+
+<{/if}>
+
+<{if $displaycolumns == 1 && !$singlevideoview && !$zerovideoview}>  
+  <tr>
+  <{foreach item=playvideo from=$playvideo}>
+	  <td align="center" valign="center">
+      <div style="width: <{$playvideo.pwidth}>px;"><table class="videoinfotable"><tr>
+        <td class="videobuttons" align="left"><button onClick="javascript:openWithSelfMain('<{$xoops_url}>/modules/videotube/reportvideopopup.php?op=generateform&vid=<{$playvideo.pref}>','ReportTag',400,300);"style="font-size: 9pt;"><{$lang_reportbutton}></button></td>
+        <td class="videobuttons" align="right"><button onclick="javascript:location.href='mailto:?subject=<{$mail_subject}>&body=<{$mail_body}>'"><{$lang_recommendbutton}></button></td>
+      </tr></table></div>
+	  <{if $playvideo.service==10}>
+          <{$playvideo.fullembedcode}>
+      <{elseif $playvideo.service==4}>
+	    <{if $vautoplay || $vselected}>
+          <embed src="http://blip.tv/play/<{$playvideo.embedcode}>" type="application/x-shockwave-flash" width="400" height="338" allowscriptaccess="always" allowfullscreen="true" autostart="true"></embed>
+        <{else}>
+          <embed src="http://blip.tv/play/<{$playvideo.embedcode}>" type="application/x-shockwave-flash" width="400" height="338" allowscriptaccess="always" allowfullscreen="true" autostart="false"></embed>
+        <{/if}>
+	  <{elseif $playvideo.service==3}>
+	    <{if $vautoplay || $vselected}>
+	      <embed src="<{$playvideo.embedcode}>" width="400" height="345" wmode="transparent" pluginspage="http://www.macromedia.com/go/getflashplayer" flashVars="playerVars=autoPlay=yes" type="application/x-shockwave-flash"></embed>
+	    <{else}>
+	      <embed src="<{$playvideo.embedcode}>" width="400" height="345" wmode="transparent" pluginspage="http://www.macromedia.com/go/getflashplayer" flashVars="playerVars=autoPlay=no" type="application/x-shockwave-flash"></embed>
+        <{/if}>
+	  <{elseif $playvideo.service==2}>
+
+	    <{if $vautoplay || $vselected}>
+	      <object width="420" height="257">
+	      <param name="movie" value="<{$playvideo.embedcode}>&autoplay=1&related=1"></param>
+	      <param name="allowFullScreen" value="true"></param>
+	      <param name="allowScriptAccess" value="always"></param>
+	      <embed src="<{$playvideo.embedcode}>&autoplay=1&related=1" 
+	        type="application/x-shockwave-flash" width="420" height="257" 
+	        allowFullScreen="true" allowScriptAccess="always"></embed></object>
+	    <{else}>
+	      <object width="420" height="257">
+	      <param name="movie" value="<{$playvideo.embedcode}>&autoplay=0&related=1"></param>
+	      <param name="allowFullScreen" value="true"></param>
+	      <param name="allowScriptAccess" value="always"></param>
+	      <embed src="<{$playvideo.embedcode}>&autoplay=0&related=1" 
+	        type="application/x-shockwave-flash" width="420" height="257" 
+	        allowFullScreen="true" allowScriptAccess="always"></embed></object>
+        <{/if}>
+	  <{else}>
+
+	  <object width="<{$playvideo.pwidth}>" height="<{$playvideo.pheight}>">
+	  
+	  <{if $vuseborder}>
+	    <param name="movie" value="http://www.youtube.com/v/<{$playvideo.pcode}>&color1=0x<{$vpricolor}>&color2=0x<{$vseccolor}>&border=1&rel=1"></param>
+	  <{else}>
+	    <param name="movie" value="http://www.youtube.com/v/<{$playvideo.pcode}>&border=0&rel=1"></param>
+	  <{/if}>
+	  
+	  <param name="wmode" value="transparent"></param>
+	  
+	  <{if $vautoplay || $vselected}>
+	    <{if $vuseborder}>
+          <embed src="http://www.youtube.com/v/<{$playvideo.pcode}>&color1=0x<{$vpricolor}>&color2=0x<{$vseccolor}>&border=1&rel=1&autoplay=1"
+        <{else}>	  
+	  	  <embed src="http://www.youtube.com/v/<{$playvideo.pcode}>&border=0&rel=1&autoplay=1"
+	    <{/if}>
+	  <{else}>
+	    <{if $vuseborder}>
+          <embed src="http://www.youtube.com/v/<{$playvideo.pcode}>&color1=0x<{$vpricolor}>&color2=0x<{$vseccolor}>&border=1&rel=1&autoplay=0"
+        <{else}>	  
+          <embed src="http://www.youtube.com/v/<{$playvideo.pcode}>&border=0&rel=1&autoplay=0"
+	    <{/if}>
+	  <{/if}> 
+
+	  type="application/x-shockwave-flash" wmode="transparent" width="<{$playvideo.pwidth}>" height="<{$playvideo.pheight}>">
+	  </embed></object><br />
+	  <{/if}>
+	  <div id="videoinfodisplay" style="width: <{$playvideo.pwidth}>px; overflow: auto;"></div>
+	  </td>
+  <{/foreach}>
+  </tr>
+  <tr><td align="center" valign="center" width="100%">
+  <div id="onecoldisplay" style="width: 425px; 
+                                   height: 210px; 
+                                   overflow: auto; 
+                                   background-color: #ffffff; 
+                                   border: 1px solid #000;
+                                   scrollbar-face-color:#bbbbbb;
+                                   scrollbar-track-color:#999999;">
+
+  <table><tr>
+  <{foreach item=videos from=$videos}>
+  	<td>
+  	<{if $sid}>
+       <a href="<{$xoops_url}>/modules/videotube/index.php?op=viewbyuser&vid=<{$videos.ref}>&sid=<{$sid}>&startvid=<{$startvid}>">
+    <{else}>
+       <{if $vcatid}>
+         <a href="<{$xoops_url}>/modules/videotube/index.php?vid=<{$videos.ref}>&startvid=<{$startvid}>&cid=<{$vcatid}>">
+       <{else}>
+         <a href="<{$xoops_url}>/modules/videotube/index.php?vid=<{$videos.ref}>&startvid=<{$startvid}>">
+       <{/if}>
+    <{/if}>
+    <{if $videos.service>1}>
+      <{if $videos.thumb}>
+        <img src="<{$videos.thumb}>" width=130px alt="<{$lang_submitted}> <{$videos.submitter}> <{$lang_on}> <{$videos.date}> <{$lang_at}> <{$videos.time}>"><br />
+      <{else}>
+        <img src="<{$xoops_url}>/modules/videotube/images/defaultthumb.jpg" width=130px alt="<{$lang_submitted}> <{$videos.submitter}> <{$lang_on}> <{$videos.date}> <{$lang_at}> <{$videos.time}>"><br />
+      <{/if}>      
+    <{else}>
+      <img src="http://img.youtube.com/vi/<{$videos.code}>/default.jpg" width=130px alt="<{$lang_submitted}> <{$videos.submitter}> <{$lang_on}> <{$videos.date}> <{$lang_at}> <{$videos.time}>"><br />
+    <{/if}>
+    <font face="Arial" style="font-size: 9pt">
+    <{$videos.title}></a><br />
+	<{if ($videos.artist)}>
+	  <{$videos.artist}><br />
+	<{/if}>
+    Views  <{$videos.views}><br />
+    <{if ($videos.servicename)}>
+      **<{$videos.servicename}>**
+    <{/if}>
+    </td>
+  <{/foreach}>
+  </tr></table>
+  </div>
+  </td>
+  </tr>
+
+<{/if}>
+
+<{if $displaycolumns == 2 && !$singlevideoview && !$zerovideoview}>  
+  <tr><td align="center" valign="center" width="25%">
+
+  <div id="twocoldisplay" style="display: block; 
+                                   width: 150px; 
+                                   height: 413px; 
+                                   overflow: auto; 
+                                   background-color: #ffffff; 
+                                   border: 1px solid #000;
+                                   scrollbar-face-color:#bbbbbb;
+                                   scrollbar-track-color:#999999;">
+
+  <b>More Videos</b><br /><br />
+  <{foreach item=videos from=$videos}>
+  	<{if $sid}>
+       <a href="<{$xoops_url}>/modules/videotube/index.php?op=viewbyuser&vid=<{$videos.ref}>&sid=<{$sid}>&startvid=<{$startvid}>">
+    <{else}>
+       <{if $vcatid}>
+         <a href="<{$xoops_url}>/modules/videotube/index.php?vid=<{$videos.ref}>&startvid=<{$startvid}>&cid=<{$vcatid}>">
+       <{else}>
+         <a href="<{$xoops_url}>/modules/videotube/index.php?vid=<{$videos.ref}>&startvid=<{$startvid}>">
+       <{/if}>
+    <{/if}>
+    <{if $videos.service > 1}>
+      <{if $videos.thumb}>
+        <img src="<{$videos.thumb}>" width=130px alt="<{$lang_submitted}> <{$videos.submitter}> <{$lang_on}> <{$videos.date}> <{$lang_at}> <{$videos.time}>"><br />
+      <{else}>
+        <img src="<{$xoops_url}>/modules/videotube/images/defaultthumb.jpg" width=130px alt="<{$lang_submitted}> <{$videos.submitter}> <{$lang_on}> <{$videos.date}> <{$lang_at}> <{$videos.time}>"><br />
+      <{/if}>      
+    <{else}>
+      <img src="http://img.youtube.com/vi/<{$videos.code}>/default.jpg" width=130px alt="<{$lang_submitted}> <{$videos.submitter}> <{$lang_on}> <{$videos.date}> <{$lang_at}> <{$videos.time}>"><br />
+    <{/if}>
+    <font face="Arial" style="font-size: 9pt">
+    <{$videos.title}></a><br />
+	<{if ($videos.artist)}>
+	  <{$videos.artist}><br />
+	<{/if}>
+    Views  <{$videos.views}><br />
+    <{if ($videos.servicename)}>
+      **<{$videos.servicename}>**
+    <{/if}>
+  <{/foreach}>
+  </div>
+  </td>
+  <{foreach item=playvideo from=$playvideo}>
+	  <td align="center" valign="center" colspan=3 rowspan=3>
+      <div style="width: <{$playvideo.pwidth}>px;"><table class="videoinfotable"><tr>
+        <td class="videobuttons" align="left"><button onClick="javascript:openWithSelfMain('<{$xoops_url}>/modules/videotube/reportvideopopup.php?op=generateform&vid=<{$playvideo.pref}>','ReportTag',400,300);"style="font-size: 9pt;"><{$lang_reportbutton}></button></td>
+        <td class="videobuttons" align="right"><button onclick="javascript:location.href='mailto:?subject=<{$mail_subject}>&body=<{$mail_body}>'"><{$lang_recommendbutton}></button></td>
+      </tr></table></div>
+	  <{if $playvideo.service==10}>
+          <{$playvideo.fullembedcode}>
+      <{elseif $playvideo.service==4}>
+	    <{if $vautoplay || $vselected}>
+          <embed src="http://blip.tv/play/<{$playvideo.embedcode}>" type="application/x-shockwave-flash" width="400" height="338" allowscriptaccess="always" allowfullscreen="true" autostart="true"></embed>
+        <{else}>
+          <embed src="http://blip.tv/play/<{$playvideo.embedcode}>" type="application/x-shockwave-flash" width="400" height="338" allowscriptaccess="always" allowfullscreen="true" autostart="false"></embed>
+        <{/if}>
+	  <{elseif $playvideo.service==3}>
+	    <{if $vautoplay || $vselected}>
+	      <embed src="<{$playvideo.embedcode}>" width="400" height="345" wmode="transparent" pluginspage="http://www.macromedia.com/go/getflashplayer" flashVars="playerVars=autoPlay=yes" type="application/x-shockwave-flash"></embed>
+	    <{else}>
+	      <embed src="<{$playvideo.embedcode}>" width="400" height="345" wmode="transparent" pluginspage="http://www.macromedia.com/go/getflashplayer" flashVars="playerVars=autoPlay=no" type="application/x-shockwave-flash"></embed>
+        <{/if}>
+	  <{elseif $playvideo.service==2}>
+	    <{if $vautoplay || $vselected}>
+	      <object width="420" height="257"><param name="movie" value="<{$playvideo.embedcode}>&autoplay=1&related=1"></param><param name="allowFullScreen" value="true"></param><param name="allowScriptAccess" value="always"></param><embed src="<{$playvideo.embedcode}>&autoplay=1&related=1" type="application/x-shockwave-flash" width="420" height="257" allowFullScreen="true" allowScriptAccess="always"></embed></object>
+        <{else}>
+	      <object width="420" height="257"><param name="movie" value="<{$playvideo.embedcode}>&autoplay=1&related=1"></param><param name="allowFullScreen" value="true"></param><param name="allowScriptAccess" value="always"></param><embed src="<{$playvideo.embedcode}>&autoplay=0&related=1" type="application/x-shockwave-flash" width="420" height="257" allowFullScreen="true" allowScriptAccess="always"></embed></object>
+        <{/if}> 
+	  <{else}>
+	    <object width="<{$playvideo.pwidth}>" height="<{$playvideo.pheight}>">
+        <{if $vuseborder}>
+	      <param name="movie" value="http://www.youtube.com/v/<{$playvideo.pcode}>&color1=0x<{$vpricolor}>&color2=0x<{$vseccolor}>&border=1&rel=1"></param>
+	    <{else}>
+	      <param name="movie" value="http://www.youtube.com/v/<{$playvideo.pcode}>&border=0&rel=1"></param>
+	    <{/if}>
+	    <param name="wmode" value="transparent"></param>
+	    <{if $vautoplay || $vselected}>
+	      <{if $vuseborder}>
+            <embed src="http://www.youtube.com/v/<{$playvideo.pcode}>&color1=0x<{$vpricolor}>&color2=0x<{$vseccolor}>&border=1&rel=1&autoplay=1"
+          <{else}>	  
+	  	    <embed src="http://www.youtube.com/v/<{$playvideo.pcode}>&border=0&rel=1&autoplay=1"
+	      <{/if}>
+	    <{else}>
+	      <{if $vuseborder}>
+            <embed src="http://www.youtube.com/v/<{$playvideo.pcode}>&color1=0x<{$vpricolor}>&color2=0x<{$vseccolor}>&border=1&rel=1&autoplay=0"
+          <{else}>	  
+            <embed src="http://www.youtube.com/v/<{$playvideo.pcode}>&border=0&rel=1&autoplay=0"
+	      <{/if}>
+	    <{/if}> 
+	    type="application/x-shockwave-flash" wmode="transparent" width="<{$playvideo.pwidth}>" height="<{$playvideo.pheight}>">
+	    </embed></object>
+	  <{/if}>
+	  <br />
+	  <div id="videoinfodisplay" style="width: <{$playvideo.pwidth}>px; overflow: auto;"></div>
+	  </td>
+  <{/foreach}>
+  </tr>
+<{/if}>
+  
+<{if $displaycolumns == 3 && !$singlevideoview && !$zerovideoview}>  
+  <{foreach item=videos from=$videos}>
+    <{if $videos.toprow == 1}>  
+	  <tr>
+	  <{foreach item=playvideo from=$playvideo}>
+	    <td align="center" valign="center" colspan=3 rowspan=3>
+      <div style="width: <{$playvideo.pwidth}>px;"><table class="videoinfotable"><tr>
+        <td class="videobuttons" align="left"><button onClick="javascript:openWithSelfMain('<{$xoops_url}>/modules/videotube/reportvideopopup.php?op=generateform&vid=<{$playvideo.pref}>','ReportTag',400,300);"style="font-size: 9pt;"><{$lang_reportbutton}></button></td>
+        <td class="videobuttons" align="right"><button onclick="javascript:location.href='mailto:?subject=<{$mail_subject}>&body=<{$mail_body}>'"><{$lang_recommendbutton}></button></td>
+      </tr></table></div>
+	  <{if $playvideo.service==10}>
+          <{$playvideo.fullembedcode}>
+      <{elseif $playvideo.service==4}>
+	    <{if $vautoplay || $vselected}>
+          <embed src="http://blip.tv/play/<{$playvideo.embedcode}>" type="application/x-shockwave-flash" width="400" height="338" allowscriptaccess="always" allowfullscreen="true" autostart="true"></embed>
+        <{else}>
+          <embed src="http://blip.tv/play/<{$playvideo.embedcode}>" type="application/x-shockwave-flash" width="400" height="338" allowscriptaccess="always" allowfullscreen="true" autostart="false"></embed>
+        <{/if}>
+	  <{elseif $playvideo.service==3}>
+	    <{if $vautoplay || $vselected}>
+	      <embed src="<{$playvideo.embedcode}>" width="400" height="345" wmode="transparent" pluginspage="http://www.macromedia.com/go/getflashplayer" flashVars="playerVars=autoPlay=yes" type="application/x-shockwave-flash"></embed>
+	    <{else}>
+	      <embed src="<{$playvideo.embedcode}>" width="400" height="345" wmode="transparent" pluginspage="http://www.macromedia.com/go/getflashplayer" flashVars="playerVars=autoPlay=no" type="application/x-shockwave-flash"></embed>
+        <{/if}>
+	  <{elseif $playvideo.service==2}>
+	    <{if $vautoplay || $vselected}>
+	      <object width="420" height="257">
+	      <param name="movie" value="<{$playvideo.embedcode}>&autoplay=1&related=1"></param>
+	      <param name="allowFullScreen" value="true"></param>
+	      <param name="allowScriptAccess" value="always"></param>
+	      <embed src="<{$playvideo.embedcode}>&autoplay=1&related=1" 
+	        type="application/x-shockwave-flash" width="420" height="257" 
+	        allowFullScreen="true" allowScriptAccess="always"></embed></object>
+	    <{else}>
+	      <object width="420" height="257">
+	      <param name="movie" value="<{$playvideo.embedcode}>&autoplay=0&related=1"></param>
+	      <param name="allowFullScreen" value="true"></param>
+	      <param name="allowScriptAccess" value="always"></param>
+	      <embed src="<{$playvideo.embedcode}>&autoplay=0&related=1" 
+	        type="application/x-shockwave-flash" width="420" height="257" 
+	        allowFullScreen="true" allowScriptAccess="always"></embed></object>
+        <{/if}>
+	  <{else}>
+	      
+	      <object width="<{$playvideo.pwidth}>" height="<{$playvideo.pheight}>">
+	      <{if $vuseborder}>
+	        <param name="movie" value="http://www.youtube.com/v/<{$playvideo.pcode}>&color1=0x<{$vpricolor}>&color2=0x<{$vseccolor}>&border=1&rel=1"></param>
+	      <{else}>
+	        <param name="movie" value="http://www.youtube.com/v/<{$playvideo.pcode}>&border=0&rel=1"></param>
+	      <{/if}>
+	      <param name="wmode" value="transparent"></param>
+	      <{if $vautoplay || $vselected}>
+	        <{if $vuseborder}>
+              <embed src="http://www.youtube.com/v/<{$playvideo.pcode}>&color1=0x<{$vpricolor}>&color2=0x<{$vseccolor}>&border=1&rel=1&autoplay=1"
+            <{else}>	  
+	  	      <embed src="http://www.youtube.com/v/<{$playvideo.pcode}>&border=0&rel=1&autoplay=1"
+	        <{/if}>
+	      <{else}>
+	        <{if $vuseborder}>
+              <embed src="http://www.youtube.com/v/<{$playvideo.pcode}>&color1=0x<{$vpricolor}>&color2=0x<{$vseccolor}>&border=1&rel=1&autoplay=0"
+            <{else}>	  
+              <embed src="http://www.youtube.com/v/<{$playvideo.pcode}>&border=0&rel=1&autoplay=0"
+	        <{/if}>
+	      <{/if}> 
+	      type="application/x-shockwave-flash" wmode="transparent" width="<{$playvideo.pwidth}>" height="<{$playvideo.pheight}>">
+	      </embed></object>
+	      <{/if}>
+	      <div id="videoinfodisplay" style="width: <{$playvideo.pwidth}>px; overflow: auto;"></div>
+	    </td>
+	    </font>
+	  <{/foreach}>
+	  </tr><tr></tr><tr></tr><tr>
+    <{/if}>
+    <td align="center" valign="center" width="33%">
+    <{if $sid}>
+       <a href="<{$xoops_url}>/modules/videotube/index.php?op=viewbyuser&vid=<{$videos.ref}>&sid=<{$sid}>&startvid=<{$startvid}>">
+    <{else}>
+       <{if $vcatid}>
+         <a href="<{$xoops_url}>/modules/videotube/index.php?vid=<{$videos.ref}>&startvid=<{$startvid}>&cid=<{$vcatid}>">
+       <{else}>
+         <a href="<{$xoops_url}>/modules/videotube/index.php?vid=<{$videos.ref}>&startvid=<{$startvid}>">
+       <{/if}>
+    <{/if}>
+    <{if $videos.service>1}>
+      <{if $videos.thumb}>
+        <img src="<{$videos.thumb}>" width=130px alt="<{$lang_submitted}> <{$videos.submitter}> <{$lang_on}> <{$videos.date}> <{$lang_at}> <{$videos.time}>"><br />
+      <{else}>
+        <img src="<{$xoops_url}>/modules/videotube/images/defaultthumb.jpg" width=130px alt="<{$lang_submitted}> <{$videos.submitter}> <{$lang_on}> <{$videos.date}> <{$lang_at}> <{$videos.time}>"><br />
+      <{/if}>      
+    <{else}>
+      <img src="http://img.youtube.com/vi/<{$videos.code}>/default.jpg" width=130px alt="<{$lang_submitted}> <{$videos.submitter}> <{$lang_on}> <{$videos.date}> <{$lang_at}> <{$videos.time}>"><br />
+    <{/if}>
+    <font face="Arial" style="font-size: 9pt">
+    <{$videos.title}></a><br />
+	<{if ($videos.artist)}>
+	  <{$videos.artist}><br />
+	<{/if}>
+    Views  <{$videos.views}><br />
+    <{if ($videos.servicename)}>
+      **<{$videos.servicename}>**
+    <{/if}>
+    </td>
+    <{if $videos.postnum == 3}>
+      </tr>
+    <{/if}>
+  <{/foreach}>
+  <{if $videos.postnum < 3}>
+    </tr>
+  <{/if}>
+<{/if}>
+
+<{if $displaycolumns == 4  && !$singlevideoview && !$zerovideoview}>
+  <{foreach item=videos from=$videos}>
+    <{if $videos.postnum == 1}>
+  	  <tr>
+    <{/if}>
+    <td align="center" valign="center" width="25%">
+    <{if $sid}>
+       <a href="<{$xoops_url}>/modules/videotube/index.php?op=viewbyuser&vid=<{$videos.ref}>&sid=<{$sid}>&startvid=<{$startvid}>">
+    <{else}>
+       <{if $vcatid}>
+         <a href="<{$xoops_url}>/modules/videotube/index.php?vid=<{$videos.ref}>&startvid=<{$startvid}>&cid=<{$vcatid}>">
+       <{else}>
+         <a href="<{$xoops_url}>/modules/videotube/index.php?vid=<{$videos.ref}>&startvid=<{$startvid}>">
+       <{/if}>
+    <{/if}>
+    <{if $videos.service>1}>
+      <{if $videos.thumb}>
+        <img src="<{$videos.thumb}>" width=130px alt="<{$lang_submitted}> <{$videos.submitter}> <{$lang_on}> <{$videos.date}> <{$lang_at}> <{$videos.time}>"><br />
+      <{else}>
+        <img src="<{$xoops_url}>/modules/videotube/images/defaultthumb.jpg" width=130px alt="<{$lang_submitted}> <{$videos.submitter}> <{$lang_on}> <{$videos.date}> <{$lang_at}> <{$videos.time}>"><br />
+      <{/if}>      
+    <{else}>
+      <img src="http://img.youtube.com/vi/<{$videos.code}>/default.jpg" width=130px alt="<{$lang_submitted}> <{$videos.submitter}> <{$lang_on}> <{$videos.date}> <{$lang_at}> <{$videos.time}>"><br />
+    <{/if}>
+    <font face="Arial" style="font-size: 9pt">
+    <{$videos.title}></a><br />
+	<{if ($videos.artist)}>
+	  <{$videos.artist}><br />
+	<{/if}>
+    Views  <{$videos.views}><br />
+    <{if ($videos.servicename)}>
+      **<{$videos.servicename}>**
+    <{/if}>
+    </td>
+    <{if $videos.toprow == 1}>
+	  <{foreach item=playvideo from=$playvideo}>
+      <td align="center" valign="center" colspan=3 rowspan=3>
+      <div style="width: <{$playvideo.pwidth}>px;"><table class="videoinfotable"><tr>
+        <td class="videobuttons" align="left"><button onClick="javascript:openWithSelfMain('<{$xoops_url}>/modules/videotube/reportvideopopup.php?op=generateform&vid=<{$playvideo.pref}>','ReportTag',400,300);" style="font-size: 9pt;"><{$lang_reportbutton}></button></td>
+        <td class="videobuttons" align="center"><button onclick="javascript:location.href='mailto:?subject=<{$mail_subject}>&body=<{$mail_body}>'" style="font-size: 9pt;"><{$lang_recommendbutton}></button></td>
+        <td class="videobuttons" align="right"><button onClick="javascript:openWithSelfMain('<{$xoops_url}>/modules/videotube/ratevideopopup.php?op=generateform&vid=<{$playvideo.pref}>','RateTag',400,300);" style="font-size: 9pt;"><{$lang_ratebutton}></button></td>
+      </tr></table></div>
+	  <{if $playvideo.service==10}>
+          <{$playvideo.fullembedcode}>
+      <{elseif $playvideo.service==4}>
+	    <{if $vautoplay || $vselected}>
+          <embed src="http://blip.tv/play/<{$playvideo.embedcode}>" type="application/x-shockwave-flash" width="400" height="338" allowscriptaccess="always" allowfullscreen="true" autostart="true"></embed>
+        <{else}>
+          <embed src="http://blip.tv/play/<{$playvideo.embedcode}>" type="application/x-shockwave-flash" width="400" height="338" allowscriptaccess="always" allowfullscreen="true" autostart="false"></embed>
+        <{/if}>
+	  <{elseif $playvideo.service==3}>
+	    <{if $vautoplay || $vselected}>
+	      <embed src="<{$playvideo.embedcode}>" width="400" height="345" wmode="transparent" pluginspage="http://www.macromedia.com/go/getflashplayer" flashVars="playerVars=autoPlay=yes" type="application/x-shockwave-flash"></embed>
+	    <{else}>
+	      <embed src="<{$playvideo.embedcode}>" width="400" height="345" wmode="transparent" pluginspage="http://www.macromedia.com/go/getflashplayer" flashVars="playerVars=autoPlay=no" type="application/x-shockwave-flash"></embed>
+        <{/if}>
+	  <{elseif $playvideo.service==2}>
+
+	    <{if $vautoplay || $vselected}>
+	      <object width="420" height="257">
+	      <param name="movie" value="<{$playvideo.embedcode}>&autoplay=1&related=1"></param>
+	      <param name="allowFullScreen" value="true"></param>
+	      <param name="allowScriptAccess" value="always"></param>
+	      <embed src="<{$playvideo.embedcode}>&autoplay=1&related=1" 
+	        type="application/x-shockwave-flash" width="420" height="257" 
+	        allowFullScreen="true" allowScriptAccess="always"></embed></object>
+	    <{else}>
+	      <object width="420" height="257">
+	      <param name="movie" value="<{$playvideo.embedcode}>&autoplay=0&related=1"></param>
+	      <param name="allowFullScreen" value="true"></param>
+	      <param name="allowScriptAccess" value="always"></param>
+	      <embed src="<{$playvideo.embedcode}>&autoplay=0&related=1" 
+	        type="application/x-shockwave-flash" width="420" height="257" 
+	        allowFullScreen="true" allowScriptAccess="always"></embed></object>
+        <{/if}>
+	  <{else}>
+
+	  <object width="<{$playvideo.pwidth}>" height="<{$playvideo.pheight}>">
+	  
+	  <{if $vuseborder}>
+	    <param name="movie" value="http://www.youtube.com/v/<{$playvideo.pcode}>&color1=0x<{$vpricolor}>&color2=0x<{$vseccolor}>&border=1&rel=1"></param>
+	  <{else}>
+	    <param name="movie" value="http://www.youtube.com/v/<{$playvideo.pcode}>&border=0&rel=1"></param>
+	  <{/if}>
+	  
+	  <param name="wmode" value="transparent"></param>
+	  
+	  <{if $vautoplay || $vselected}>
+	    <{if $vuseborder}>
+          <embed src="http://www.youtube.com/v/<{$playvideo.pcode}>&color1=0x<{$vpricolor}>&color2=0x<{$vseccolor}>&border=1&rel=1&autoplay=1"
+        <{else}>	  
+	  	  <embed src="http://www.youtube.com/v/<{$playvideo.pcode}>&border=0&rel=1&autoplay=1"
+	    <{/if}>
+	  <{else}>
+	    <{if $vuseborder}>
+          <embed src="http://www.youtube.com/v/<{$playvideo.pcode}>&color1=0x<{$vpricolor}>&color2=0x<{$vseccolor}>&border=1&rel=1&autoplay=0"
+        <{else}>	  
+          <embed src="http://www.youtube.com/v/<{$playvideo.pcode}>&border=0&rel=1&autoplay=0"
+	    <{/if}>
+	  <{/if}> 
+
+	  type="application/x-shockwave-flash" wmode="transparent" width="<{$playvideo.pwidth}>" height="<{$playvideo.pheight}>">
+	  </embed></object><br />
+	  <{/if}>
+	  <div id="videoinfodisplay" style="width: <{$playvideo.pwidth}>px; overflow: auto;"></div>
+	  </td>
+	  <{/foreach}>
+    <{/if}>
+    <{if $videos.postnum == 4 || $videos.rownum < 4}>
+      </tr>
+    <{/if}>
+  <{/foreach}>
+  <{if $videos.postnum < 4 && $videos.rownum > 3}>
+      </tr>
+  <{/if}>
+<{/if}>
+
+<{if $displaycolumns == 5 && !$singlevideoview && !$zerovideoview}>
+  <{foreach item=videos from=$videos}>
+    <{if $videos.postnum == 1}>
+  	  <tr>
+    <{/if}>
+    <td align="center" valign="center" width="20%">
+    <{if $sid}>
+       <a href="<{$xoops_url}>/modules/videotube/index.php?op=viewbyuser&vid=<{$videos.ref}>&sid=<{$sid}>&startvid=<{$startvid}>">
+    <{else}>
+      <{if $vcatid}>
+        <a href="<{$xoops_url}>/modules/videotube/index.php?vid=<{$videos.ref}>&startvid=<{$startvid}>&cid=<{$vcatid}>">
+      <{else}>
+        <a href="<{$xoops_url}>/modules/videotube/index.php?vid=<{$videos.ref}>&startvid=<{$startvid}>">
+      <{/if}>
+    <{/if}>
+    <{if $videos.service>1}>
+      <{if $videos.thumb}>
+        <img src="<{$videos.thumb}>" width=130px alt="<{$lang_submitted}> <{$videos.submitter}> <{$lang_on}> <{$videos.date}> <{$lang_at}> <{$videos.time}>"><br />
+      <{else}>
+        <img src="<{$xoops_url}>/modules/videotube/images/defaultthumb.jpg" width=130px alt="<{$lang_submitted}> <{$videos.submitter}> <{$lang_on}> <{$videos.date}> <{$lang_at}> <{$videos.time}>"><br />
+      <{/if}>      
+    <{else}>
+      <img src="http://img.youtube.com/vi/<{$videos.code}>/default.jpg" width=130px alt="<{$lang_submitted}> <{$videos.submitter}> <{$lang_on}> <{$videos.date}> <{$lang_at}> <{$videos.time}>"><br />
+    <{/if}>
+    <font face="Arial" style="font-size: 9pt">
+    <{$videos.title}></a><br />
+	<{if ($videos.artist)}>
+	  <{$videos.artist}><br />
+	<{/if}>
+    Views  <{$videos.views}><br />
+    <{if ($videos.servicename)}>
+      **<{$videos.servicename}>**
+    <{/if}>
+    </td>
+    <{if $videos.toprow == 1}>
+	  <{foreach item=playvideo from=$playvideo}>
+	  <td align="center" valign="center" colspan=3 rowspan=3>
+      <div style="width: <{$playvideo.pwidth}>px;"><table class="videoinfotable"><tr>
+        <td class="videobuttons" align="left"><button onClick="javascript:openWithSelfMain('<{$xoops_url}>/modules/videotube/reportvideopopup.php?op=generateform&vid=<{$playvideo.pref}>','ReportTag',400,300);"style="font-size: 9pt;"><{$lang_reportbutton}></button></td>
+        <td class="videobuttons" align="right"><button onclick="javascript:location.href='mailto:?subject=<{$mail_subject}>&body=<{$mail_body}>'"><{$lang_recommendbutton}></button></td>
+      </tr></table></div>
+	  <{if $playvideo.service==10}>
+          <{$playvideo.fullembedcode}>
+      <{elseif $playvideo.service==4}>
+	    <{if $vautoplay || $vselected}>
+          <embed src="http://blip.tv/play/<{$playvideo.embedcode}>" type="application/x-shockwave-flash" width="400" height="338" allowscriptaccess="always" allowfullscreen="true" autostart="true"></embed>
+        <{else}>
+          <embed src="http://blip.tv/play/<{$playvideo.embedcode}>" type="application/x-shockwave-flash" width="400" height="338" allowscriptaccess="always" allowfullscreen="true" autostart="false"></embed>
+        <{/if}>
+	  <{elseif $playvideo.service==3}>
+	    <{if $vautoplay || $vselected}>
+	      <embed src="<{$playvideo.embedcode}>" width="400" height="345" wmode="transparent" pluginspage="http://www.macromedia.com/go/getflashplayer" flashVars="playerVars=autoPlay=yes" type="application/x-shockwave-flash"></embed>
+	    <{else}>
+	      <embed src="<{$playvideo.embedcode}>" width="400" height="345" wmode="transparent" pluginspage="http://www.macromedia.com/go/getflashplayer" flashVars="playerVars=autoPlay=no" type="application/x-shockwave-flash"></embed>
+        <{/if}>
+	  <{elseif $playvideo.service==2}>
+	      <{if $vautoplay || $vselected}>
+	        <object width="420" height="257">
+	        <param name="movie" value="<{$playvideo.embedcode}>&autoplay=1&related=1"></param>
+	        <param name="allowFullScreen" value="true"></param>
+	        <param name="allowScriptAccess" value="always"></param>
+	        <embed src="<{$playvideo.embedcode}>&autoplay=1&related=1" 
+	          type="application/x-shockwave-flash" width="420" height="257" 
+	          allowFullScreen="true" allowScriptAccess="always"></embed></object>
+	      <{else}>
+	        <object width="420" height="257">
+	        <param name="movie" value="<{$playvideo.embedcode}>&autoplay=0&related=1"></param>
+	        <param name="allowFullScreen" value="true"></param>
+	        <param name="allowScriptAccess" value="always"></param>
+	        <embed src="<{$playvideo.embedcode}>&autoplay=0&related=1" 
+	          type="application/x-shockwave-flash" width="420" height="257" 
+	          allowFullScreen="true" allowScriptAccess="always"></embed></object>
+          <{/if}>
+	    <{else}>
+
+	      <object width="<{$playvideo.pwidth}>" height="<{$playvideo.pheight}>">
+
+	      <{if $vuseborder}>
+	        <param name="movie" value="http://www.youtube.com/v/<{$playvideo.pcode}>&color1=0x<{$vpricolor}>&color2=0x<{$vseccolor}>&border=1&rel=1"></param>
+	      <{else}>
+	        <param name="movie" value="http://www.youtube.com/v/<{$playvideo.pcode}>&border=0&rel=1"></param>
+	      <{/if}>
+	  
+	      <param name="wmode" value="transparent"></param>
+	  
+	      <{if $vautoplay || $vselected}>
+	        <{if $vuseborder}>
+              <embed src="http://www.youtube.com/v/<{$playvideo.pcode}>&color1=0x<{$vpricolor}>&color2=0x<{$vseccolor}>&border=1&rel=1&autoplay=1"
+            <{else}>	  
+	  	      <embed src="http://www.youtube.com/v/<{$playvideo.pcode}>&border=0&rel=1&autoplay=1"
+	        <{/if}>
+	      <{else}>
+	        <{if $vuseborder}>
+              <embed src="http://www.youtube.com/v/<{$playvideo.pcode}>&color1=0x<{$vpricolor}>&color2=0x<{$vseccolor}>&border=1&rel=1&autoplay=0"
+            <{else}>	  
+              <embed src="http://www.youtube.com/v/<{$playvideo.pcode}>&border=0&rel=1&autoplay=0"
+	        <{/if}>
+	      <{/if}> 
+
+	      type="application/x-shockwave-flash" wmode="transparent" width="<{$playvideo.pwidth}>" height="<{$playvideo.pheight}>">
+	      </embed></object><br />
+	    <{/if}>
+	    <div id="videoinfodisplay" style="width: <{$playvideo.pwidth}>px; overflow: auto;"></div>
+	    </td>
+	  <{/foreach}>
+    <{/if}>
+    <{if $videos.postnum == 5 || ($videos.rownum < 4 && $videos.postnum > 1)}>
+      </tr>
+    <{/if}>
+  <{/foreach}>
+  <{if $videos.postnum < 5 && $videos.rownum > 3}>
+    </tr>
+  <{/if}>
+<{/if}>
+</table>
+<table>
+  <tr>
+    <{if $video_page_nav}>
+      <td align="left" width="50%"><b><i><{$lang_pagesel}></i></b> <{$video_page_nav}></td>
+    <{else}>
+      <td align="left" width="50%">&nbsp;</td>
+    <{/if}>
+    <td align="right" width="50%">Powered by <a href="http://www.customvirtualdesigns.com">CVD</a></td>
+  </tr>
+</table>
+
+</div>
+
+  <div>
+  <{$commentsnav}>
+  <{if $comment_mode == "flat"}> 
+    <{include file="db:system_comments_flat.html"}> 
+  <{elseif $comment_mode == "thread"}> 
+    <{include file="db:system_comments_thread.html"}> 
+  <{elseif $comment_mode == "nest"}>
+    <{include file="db:system_comments_nest.html"}> 
+  <{/if}> 
+  </div>
+
+<{if $playvideo.service==10}>
+
+<script>
+    var title = '<{$unvideotitle}>';
+    var content = '<{$unvideodesc}>';
+    var localViews = '<{$unlocalviews}>';
+    var submitter = '<{$unsubmitter}>';
+    var vsubmitdate = '<{$unvsubmitdate}>';
+    var vsubmittime = '<{$unvsubmittime}>';
+	var localRaters;
+	var localRating;
+    
+    var abbrevcontent;
+   
+    if (content.length > 50){
+      abbrevcontent = content.substr(0,45)+".....";
+    }else{
+      abbrevcontent = content;
+    }
+
+    title = cleanForJS(title);
+    content = cleanForJS(content);
+
+	localRaters = '<{$playvideo.localraters}>'; 
+	if (localRaters < 1) {
+	  localRating = 'N/A';
+    }else{
+	  localRating = '<{$playvideo.localrating}>';
+	}
+
+    displayLessInfo();
+
+  function cleanForJS(text) {
+
+    var vtext =  text.split("\'").join("&#39;");
+    var vtext =  vtext.split("\"").join("&#34;");
+    return vtext; 
+  }
+
+  function displayMoreInfo() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayLessInfo();"style="font-size: 9pt;"><{$lang_displayless}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$lang_videotitle}>:</b> ', title, '</td></tr>');
+    html.push('<tr><td class="videoinfohead" colspan=5 align="left"><b><{$lang_desc}>:</b> ', content, '<br></td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$lang_localviews}>:</b></td><td class="videoinfoeven" align=left>', localViews, '</td>');
+    html.push('<td class="videoinfoodd" align=left><b><{$lang_submitter}>:</b></td><td class="videoinfoeven" align=left>', submitter, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$lang_submitdate}>:</b></td><td class="videoinfoeven" align=left>', vsubmitdate, '</td>');
+    html.push('<td class="videoinfoodd" align=left><b><{$lang_submittime}>:</b></td><td class="videoinfoeven" align=left>', vsubmittime, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$lang_lraters}>:</b></td><td class="videoinfoeven" align=left>', localRaters, '</td>');
+    html.push('<td class="videoinfoodd" align=left><b><{$lang_lrating}>:</b></td><td class="videoinfoeven" align=left>', localRating, '</td></tr>');
+    html.push('</table>');
+ 
+    document.getElementById("videoinfodisplay").innerHTML = html.join("");
+  }
+
+  function displayLessInfo() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayMoreInfo();"style="font-size: 9pt;"><{$lang_displaymore}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$lang_videotitle}>:</b> ', title, '</td></tr>');
+    html.push('<tr><td class="videoinfohead" colspan=5 align="left"><b><{$lang_desc}>:</b> ', abbrevcontent, '<br></td></tr>');
+    html.push('</table>');
+    
+    document.getElementById("videoinfodisplay").innerHTML = html.join("");
+  }
+
+</script>
+
+<{elseif $playvideo.service==4}>
+
+<script>
+    var title = '<{$btvideotitle}>';
+    var content = '<{$btvideodesc}>';
+    var durationmin;
+    var durationsec;
+    var btduration = <{$btduration}>;
+    var duration;
+    var author = '<{$btvideoauthor}>';
+    var btpublished = '<{$btpublished}>';
+    var btrating = '<{$btvideorating}>';
+    var btpublisheddate;
+  
+    var localViews = '<{$btlocalviews}>';
+    var submitter = '<{$btsubmitter}>';
+    var vsubmitdate = '<{$btvsubmitdate}>';
+    var vsubmittime = '<{$btvsubmittime}>';
+	var localRaters;
+	var localRating;
+    
+    var abbrevcontent;
+   
+    if (content.length > 50){
+      abbrevcontent = content.substr(0,45)+".....";
+    }else{
+      abbrevcontent = content;
+    }
+
+    btpublished = btpublished.split("+");
+    btpublisheddate = btpublished[0];
+
+    durationmin = Math.floor(btduration/60);
+    durationsec = btduration - (durationmin*60);
+    duration = durationmin+' min '+durationsec+' sec';
+
+    title = cleanForJS(title);
+    content = cleanForJS(content);
+
+	localRaters = '<{$playvideo.localraters}>'; 
+	if (localRaters < 1) {
+	  localRating = 'N/A';
+    }else{
+	  localRating = '<{$playvideo.localrating}>';
+	}
+
+    displayLessInfo();
+
+  function cleanForJS(text) {
+
+    var vtext =  text.split("\'").join("&#39;");
+    var vtext =  vtext.split("\"").join("&#34;");
+    return vtext; 
+  }
+
+  function displayMoreInfo() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayLessInfo();"style="font-size: 9pt;"><{$lang_displayless}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$lang_videotitle}>:</b> ', title, '</td></tr>');
+    html.push('<tr><td class="videoinfohead" colspan=5 align="left"><b><{$lang_desc}>:</b> ', content, '<br></td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$lang_localviews}>:</b></td><td class="videoinfoeven" align=left>', localViews, '</td>');
+    html.push('<td class="videoinfoodd" align=left><b><{$lang_submitter}>:</b></td><td class="videoinfoeven" align=left>', submitter, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$lang_duration}>:</b></td><td class="videoinfoeven" align=left>', duration, '</td>');
+    html.push('<td class="videoinfoodd" align=left><b><{$lang_submitdate}>:</b></td><td class="videoinfoeven" align=left>', vsubmitdate, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$lang_author}>:</b></td><td class="videoinfoeven" align=left>', author, '</td>');
+    html.push('<td class="videoinfoodd" align=left><b><{$lang_submittime}>:</b></td><td class="videoinfoeven" align=left>', vsubmittime, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$lang_avgrating}>:</b></td><td class="videoinfoeven" align=left>', btrating, '</td>');
+    html.push('<td class="videoinfoodd" align=left><b><{$lang_pubdate}>:</b></td><td class="videoinfoeven" align=left>', btpublisheddate, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$lang_lraters}>:</b></td><td class="videoinfoeven" align=left>', localRaters, '</td>');
+    html.push('<td class="videoinfoodd" align=left><b><{$lang_lrating}>:</b></td><td class="videoinfoeven" align=left>', localRating, '</td></tr>');
+    html.push('</table>');
+ 
+    document.getElementById("videoinfodisplay").innerHTML = html.join("");
+  }
+
+  function displayLessInfo() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayMoreInfo();"style="font-size: 9pt;"><{$lang_displaymore}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$lang_videotitle}>:</b> ', title, '</td></tr>');
+    html.push('<tr><td class="videoinfohead" colspan=5 align="left"><b><{$lang_desc}>:</b> ', abbrevcontent, '<br></td></tr>');
+    html.push('</table>');
+    
+    document.getElementById("videoinfodisplay").innerHTML = html.join("");
+  }
+
+</script>
+
+<{elseif $playvideo.service==3}>
+
+<script>
+    var title = '<{$mcvideotitle}>';
+    var content = '<{$mcvideodesc}>';
+    var durationmin;
+    var durationsec;
+    var mcduration = <{$mcduration}>;
+    var duration;
+    var author = '<{$mcvideoauthor}>';
+    var mcviews = '<{$mcvideoviews}>';
+    var mcrating = '<{$mcvideorating}>';
+    var mcpublished = '<{$mcpublished}>';
+    var mcpublisheddate;
+  
+    var localViews = '<{$mclocalviews}>';
+    var submitter = '<{$mcsubmitter}>';
+    var vsubmitdate = '<{$mcvsubmitdate}>';
+    var vsubmittime = '<{$mcvsubmittime}>';
+	var localRaters;
+	var localRating;
+    
+    var abbrevcontent;
+   
+    if (content.length > 50){
+      abbrevcontent = content.substr(0,45)+".....";
+    }else{
+      abbrevcontent = content;
+    }
+
+    mcpublished = mcpublished.split("+");
+    mcpublisheddate = mcpublished[0];
+
+    durationmin = Math.floor(mcduration/60);
+    durationsec = mcduration - (durationmin*60);
+    duration = durationmin+' min '+durationsec+' sec';
+
+    title = cleanForJS(title);
+    content = cleanForJS(content);
+
+	localRaters = '<{$playvideo.localraters}>'; 
+	if (localRaters < 1) {
+	  localRating = 'N/A';
+    }else{
+	  localRating = '<{$playvideo.localrating}>';
+	}
+
+    displayLessInfo();
+
+  function cleanForJS(text) {
+
+    var vtext =  text.split("\'").join("&#39;");
+    var vtext =  vtext.split("\"").join("&#34;");
+    return vtext; 
+  }
+
+  function displayMoreInfo() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayLessInfo();"style="font-size: 9pt;"><{$lang_displayless}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$lang_videotitle}>:</b> ', title, '</td></tr>');
+    html.push('<tr><td class="videoinfohead" colspan=5 align="left"><b><{$lang_desc}>:</b> ', content, '<br></td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$lang_localviews}>:</b></td><td class="videoinfoeven" align=left>', localViews, '</td>');
+    html.push('<td class="videoinfoodd" align=left><b><{$lang_submitter}>:</b></td><td class="videoinfoeven" align=left>', submitter, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$lang_duration}>:</b></td><td class="videoinfoeven" align=left>', duration, '</td>');
+    html.push('<td class="videoinfoodd" align=left><b><{$lang_submitdate}>:</b></td><td class="videoinfoeven" align=left>', vsubmitdate, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$lang_views}>:</b></td><td class="videoinfoeven" align=left>', mcviews, '</td>');
+    html.push('<td class="videoinfoodd" align=left><b><{$lang_submittime}>:</b></td><td class="videoinfoeven" align=left>', vsubmittime, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$lang_author}>:</b></td><td class="videoinfoeven" align=left>', author, '</td>');
+    html.push('<td class="videoinfoodd" align=left><b><{$lang_pubdate}>:</b></td><td class="videoinfoeven" align=left>', mcpublisheddate, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$lang_avgrating}>:</b></td><td class="videoinfoeven" align=left>', mcrating, '</td>');
+    html.push('<td class="videoinfoodd" align=left>&nbsp;</td><td class="videoinfoeven" align=left>&nbsp;</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$lang_lraters}>:</b></td><td class="videoinfoeven" align=left>', localRaters, '</td>');
+    html.push('<td class="videoinfoodd" align=left><b><{$lang_lrating}>:</b></td><td class="videoinfoeven" align=left>', localRating, '</td></tr>');
+    html.push('</table>');
+ 
+    document.getElementById("videoinfodisplay").innerHTML = html.join("");
+  }
+
+  function displayLessInfo() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayMoreInfo();"style="font-size: 9pt;"><{$lang_displaymore}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$lang_videotitle}>:</b> ', title, '</td></tr>');
+    html.push('<tr><td class="videoinfohead" colspan=5 align="left"><b><{$lang_desc}>:</b> ', abbrevcontent, '<br></td></tr>');
+    html.push('</table>');
+    
+    document.getElementById("videoinfodisplay").innerHTML = html.join("");
+  }
+
+</script>
+
+<{elseif $playvideo.service==2}>
+
+<script>
+    var title = '<{$dmvideotitle}>';
+    var content = '<{$dmvideodesc}>';
+    var durationmin;
+    var durationsec;
+    var dmduration = <{$dmduration}>;
+    var duration;
+    var author = '<{$dmvideoauthor}>';
+    var dmviews = '<{$dmvideoviews}>';
+    var dmfavs = '<{$dmfavorites}>';
+    var dmvideovotes = '<{$dmvideovotes}>';
+    var dmrating = '<{$dmvideorating}>';
+    var dmpublished = '<{$dmpublished}>';
+    var dmpublisheddate;
+    var dmpublishedtime;
+  
+    var localViews = '<{$dmlocalviews}>';
+    var submitter = '<{$dmsubmitter}>';
+    var vsubmitdate = '<{$dmvsubmitdate}>';
+    var vsubmittime = '<{$dmvsubmittime}>';
+	var localRaters;
+	var localRating;
+    
+    var abbrevcontent;
+   
+    if (content.length > 50){
+      abbrevcontent = content.substr(0,45)+".....";
+    }else{
+      abbrevcontent = content;
+    }
+
+    dmpublished = dmpublished.split("+");
+    dmpublisheddate = dmpublished[0].substr(0,16);
+    dmpublishedtime = dmpublished[0].substr(17);
+
+    durationmin = Math.floor(dmduration/60);
+    durationsec = dmduration - (durationmin*60);
+    duration = durationmin+' min '+durationsec+' sec';
+
+    title = cleanForJS(title);
+    content = cleanForJS(content);
+
+	localRaters = '<{$playvideo.localraters}>'; 
+	if (localRaters < 1) {
+	  localRating = 'N/A';
+    }else{
+	  localRating = '<{$playvideo.localrating}>';
+	}
+
+    displayLessInfo();
+
+  function cleanForJS(text) {
+
+    var vtext =  text.split("\'").join("&#39;");
+    var vtext =  vtext.split("\"").join("&#34;");
+    return vtext; 
+  }
+
+  function displayMoreInfo() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayLessInfo();"style="font-size: 9pt;"><{$lang_displayless}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$lang_videotitle}>:</b> ', title, '</td></tr>');
+    html.push('<tr><td class="videoinfohead" colspan=5 align="left"><b><{$lang_desc}>:</b> ', content, '<br></td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$lang_localviews}>:</b></td><td class="videoinfoeven" align=left>', localViews, '</td>');
+    html.push('<td class="videoinfoodd" align=left><b><{$lang_submitter}>:</b></td><td class="videoinfoeven" align=left>', submitter, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$lang_duration}>:</b></td><td class="videoinfoeven" align=left>', duration, '</td>');
+    html.push('<td class="videoinfoodd" align=left><b><{$lang_submitdate}>:</b></td><td class="videoinfoeven" align=left>', vsubmitdate, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$lang_views}>:</b></td><td class="videoinfoeven" align=left>', dmviews, '</td>');
+    html.push('<td class="videoinfoodd" align=left><b><{$lang_submittime}>:</b></td><td class="videoinfoeven" align=left>', vsubmittime, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$lang_favorites}>:</b></td><td class="videoinfoeven" align=left>', dmfavs, '</td>');
+    html.push('<td class="videoinfoodd" align=left><b><{$lang_author}>:</b></td><td class="videoinfoeven" align=left>', author, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$lang_raters}>:</b></td><td class="videoinfoeven" align=left>', dmvideovotes, '</td>');
+    html.push('<td class="videoinfoodd" align=left><b><{$lang_pubdate}>:</b></td><td class="videoinfoeven" align=left>', dmpublisheddate, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$lang_avgrating}>:</b></td><td class="videoinfoeven" align=left>', dmrating, '</td>');
+    html.push('<td class="videoinfoodd" align=left><b><{$lang_pubtime}>:</b></td><td class="videoinfoeven" align=left>', dmpublishedtime, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$lang_lraters}>:</b></td><td class="videoinfoeven" align=left>', localRaters, '</td>');
+    html.push('<td class="videoinfoodd" align=left><b><{$lang_lrating}>:</b></td><td class="videoinfoeven" align=left>', localRating, '</td></tr>');
+    html.push('</table>');
+ 
+    document.getElementById("videoinfodisplay").innerHTML = html.join("");
+  }
+
+  function displayLessInfo() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayMoreInfo();"style="font-size: 9pt;"><{$lang_displaymore}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$lang_videotitle}>:</b> ', title, '</td></tr>');
+    html.push('<tr><td class="videoinfohead" colspan=5 align="left"><b><{$lang_desc}>:</b> ', abbrevcontent, '<br></td></tr>');
+    html.push('</table>');
+    
+    document.getElementById("videoinfodisplay").innerHTML = html.join("");
+  }
+
+</script>
+
+<{elseif !$zerovideoview}>
+<script>
+    var title;
+    var youtubeduration;
+    var durationmin;
+    var durationsec;
+    var duration;
+    var author;
+    var content;
+    var abbrevcontent;
+    var ytviews;
+    var ytfavs;
+    var ytraters;
+    var ytrating;
+    var youtubepublished;
+    var youtubepublisheddate;
+    var youtubepublished2;
+    var youtubepublishedtime;
+  
+    var localViews;
+    var localTitle;
+    var localArtist;
+    var submitter;
+    var vsubmitdate;
+    var vsubmittime;
+	var localRaters;
+	var localRating;
+
+
+  function cleanForJS(text) {
+
+    var vtext =  text.split("\'").join("&#39;");
+    var vtext =  vtext.split("\"").join("&#34;");
+    return vtext; 
+  }
+
+  function showVideoInfo(json) {
+
+	title = cleanForJS(json.entry['media$group']['media$title'].$t);
+    youtubeduration = json.entry['media$group']['yt$duration'].seconds;
+    durationmin = Math.floor(youtubeduration/60);
+    durationsec = youtubeduration - (durationmin*60);
+    duration = durationmin+' min '+durationsec+' sec';
+    author = cleanForJS(json.entry['author'][0].name.$t);
+    if ('<{$playvideo.pdesc}>') {
+      content = '<{$playvideo.pdesc}>';
+    }else{
+      content = cleanForJS(json.entry['media$group']['media$description'].$t);
+    }
+    
+    if (content.length > 50){
+      abbrevcontent = content.substr(0,45)+".....";
+    }else{
+      abbrevcontent = content;
+    }
+    
+    ytviews = json.entry['yt$statistics'].viewCount;
+    if (json.entry['yt$statistics'].favoriteCount) {
+      ytfavs = json.entry['yt$statistics'].favoriteCount;
+    } else {
+      ytfavs = '0';
+    }
+    if (json.entry['gd$rating']) {
+      ytraters = json.entry['gd$rating'].numRaters;
+      ytrating = json.entry['gd$rating'].average;
+    } else {
+      ytraters = '0';
+      ytrating = 'No Rating';
+    }
+    youtubepublished = json.entry.published.$t;
+    youtubepublished = youtubepublished.split("T");
+    youtubepublisheddate = youtubepublished[0];
+    youtubepublished2 = youtubepublished[1];
+    youtubepublished2 = youtubepublished2.split(".");
+    youtubepublishedtime = youtubepublished2[0];
+  
+    localViews = <{$playvideo.pviews}>;
+    localTitle = '<{$playvideo.ptitleesc}>';
+    localArtist = '<{$playvideo.partistesc}>';
+    submitter = cleanForJS('<{$playvideo.submitter}>');
+    vsubmitdate = '<{$playvideo.date}>';
+    vsubmittime = '<{$playvideo.time}>';
+	localRaters = '<{$playvideo.localraters}>'; 
+	if (localRaters < 1) {
+	  localRating = 'N/A';
+    }else{
+	  localRating = '<{$playvideo.localrating}>';
+	}
+    displayLessInfo();
+  }
+
+  function displayMoreInfo() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayLessInfo();"style="font-size: 9pt;"><{$lang_displayless}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$lang_videotitle}>:</b> ', title, '</td></tr>');
+    html.push('<tr><td class="videoinfohead" colspan=5 align="left"><b><{$lang_desc}>:</b> ', content, '<br></td></tr>');
+    html.push('<tr><td align=left><b><{$lang_localviews}>:</b></td><td class="videoinfoeven" align=left>', localViews, '</td>');
+    html.push('<td align=left><b><{$lang_submitter}>:</b></td><td class="videoinfoeven" align=left>', submitter, '</td></tr>');
+    html.push('<tr><td align=left><b><{$lang_duration}>:</b></td><td class="videoinfoeven" align=left>', duration, '</td>');
+    html.push('<td align=left><b><{$lang_submitdate}>:</b></td><td class="videoinfoeven" align=left>', vsubmitdate, '</td></tr>');
+    html.push('<tr><td align=left><b><{$lang_views}>:</b></td><td class="videoinfoeven" align=left>', ytviews, '</td>');
+    html.push('<td align=left><b><{$lang_lraters}>:</b></td><td class="videoinfoeven" align=left>', localRaters, '</td></tr>');
+    html.push('<tr><td align=left><b><{$lang_favorites}>:</b></td><td class="videoinfoeven" align=left>', ytfavs, '</td>');
+    html.push('<td align=left><b><{$lang_lrating}>:</b></td><td class="videoinfoeven" align=left>', localRating, '</td></tr>');
+    html.push('<tr><td align=left><b><{$lang_raters}>:</b></td><td class="videoinfoeven" align=left>', ytraters, '</td>');
+    html.push('<td align=left><b><{$lang_author}>:</b></td><td class="videoinfoeven" align=left>', author, '</td></tr>');
+    html.push('<tr><td align=left><b><{$lang_avgrating}>:</b></td><td class="videoinfoeven" align=left>', ytrating, '</td>');
+    html.push('<td align=left><b><{$lang_pubdate}>:</b></td><td class="videoinfoeven" align=left>', youtubepublisheddate, '</td></tr>');
+    html.push('</table>');
+ 
+    document.getElementById("videoinfodisplay").innerHTML = html.join("");
+  }
+
+  function displayLessInfo() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayMoreInfo();"style="font-size: 9pt;"><{$lang_displaymore}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$lang_videotitle}>:</b> ', title, '</td></tr>');
+    html.push('<tr><td class="videoinfohead" colspan=5 align="left"><b><{$lang_desc}>:</b> ', abbrevcontent, '<br></td></tr>');
+    html.push('</table>');
+    
+    document.getElementById("videoinfodisplay").innerHTML = html.join("");
+  }
+
+</script>
+
+<script src="http://gdata.youtube.com/feeds/api/videos/<{$playvideo.pcode}>?alt=json-in-script&callback=showVideoInfo">
+</script>
+<{/if}>

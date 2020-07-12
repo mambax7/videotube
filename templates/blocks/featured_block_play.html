@@ -1,0 +1,347 @@
+<style type='text/css' media='all'>
+  @import url(<{$block.videocss}>);
+</style>
+
+<table border="0" cellpadding="0" cellspacing="1" width="100%">
+  <tr>
+    <{foreach item=vid_disp from=$block.vp_vid_disp}>
+      <td class="playvideobackdrop" align="center" valign="middle">
+      <{if ($vid_disp.service == 10)}>
+        <{$vid_disp.modifiedfullembedcode}><br />
+        <div id="videodisplayfeatured" style="width: <{$vid_disp.pwidth}>px; overflow: auto;"></div>
+      <{elseif ($vid_disp.service == 4)}>
+        <embed src="http://blip.tv/play/<{$vid_disp.embedcode}>" type="application/x-shockwave-flash" width="<{$vid_disp.pwidth}>" height="<{$vid_disp.pheight}>" allowscriptaccess="always" allowfullscreen="true"></embed><br />
+        <div id="videodisplayfeatured" style="width: <{$vid_disp.pwidth}>px; overflow: auto;"></div>
+      <{elseif ($vid_disp.service == 3)}>
+	    <embed src="<{$vid_disp.embedcode}>" width="<{$vid_disp.pwidth}>" height="<{$vid_disp.pheight}>" wmode="transparent" pluginspage="http://www.macromedia.com/go/getflashplayer" flashVars="playerVars=autoPlay=no" type="application/x-shockwave-flash"></embed><br />
+	    <div id="videodisplayfeatured" style="width: <{$vid_disp.pwidth}>px; overflow: auto;"></div>
+      <{elseif ($vid_disp.service == 2)}>
+        <object width="<{$vid_disp.pwidth}>" height="<{$vid_disp.pheight}>">
+	    <param name="movie" value="<{$vid_disp.embedcode}>&autoplay=0&related=1"></param>
+	    <param name="allowFullScreen" value="true"></param>
+	    <param name="allowScriptAccess" value="always"></param>
+	    <embed src="<{$vid_disp.embedcode}>&autoplay=0&related=1" 
+	      type="application/x-shockwave-flash" width="<{$vid_disp.pwidth}>" height="<{$vid_disp.pheight}>" 
+	      allowFullScreen="true" allowScriptAccess="always"></embed></object><br />
+	    <div id="videodisplayfeatured" style="width: <{$vid_disp.pwidth}>px; overflow: auto;"></div>
+      <{else}>
+        <object width="<{$vid_disp.pwidth}>" height="<{$vid_disp.pheight}>">
+	    <param name="movie" value="http://www.youtube.com/v/<{$vid_disp.pcode}>&border=0&rel=1"></param>
+	    <param name="wmode" value="transparent"></param>
+	    <embed src="http://www.youtube.com/v/<{$vid_disp.pcode}>&border=0&rel=1&autoplay=0"
+          type="application/x-shockwave-flash" wmode="transparent" width="<{$vid_disp.pwidth}>" height="<{$vid_disp.pheight}>">
+	      </embed></object><br />
+	    <div id="videodisplayfeatured" style="width: <{$vid_disp.pwidth}>px; overflow: auto;"></div>
+      <{/if}>
+      </td>
+    <{/foreach}>
+  </tr>
+</table>
+
+<{if $vid_disp.service == 10}>
+<script>
+    var ft_title = '<{$block.un_ft_videotitle}>';
+    var ft_localViews = '<{$block.un_ft_localviews}>';
+    var ft_submitter = '<{$block.un_ft_submitter}>';
+    var ft_vsubmitdate = '<{$block.un_ft_vsubmitdate}>';
+    
+    ft_title = cleanForJSFeatured(ft_title);
+
+    displayLessInfoFeatured();
+
+  function cleanForJSLatest(text) {
+
+    var vtext =  text.split("\'").join("&#39;");
+    var vtext =  vtext.split("\"").join("&#34;");
+    return vtext; 
+  }
+
+  function displayMoreInfoFeatured() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayLessInfoFeatured();" style="font-size: 9pt;"><{$block.lang_displayless}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$block.lang_videotitle}>:</b>&nbsp;', ft_title, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_localviews}>:</b></td><td class="videoinfoeven" align=left>', ft_localViews, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_localsubmitter}>:</b></td><td class="videoinfoeven" align=left>', ft_submitter, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_submitdate}>:</b></td><td class="videoinfoeven" align=left>', ft_vsubmitdate, '</td></tr>');
+    html.push('</table>');
+ 
+    document.getElementById("videodisplayfeatured").innerHTML = html.join("");
+  }
+
+  function displayLessInfoFeatured() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayMoreInfoFeatured();" style="font-size: 9pt;"><{$block.lang_displaymore}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$block.lang_videotitle}>:</b> ', ft_title, '</td></tr>');
+    html.push('</table>');
+    
+    document.getElementById("videodisplayfeatured").innerHTML = html.join("");
+  }    
+</script>
+
+<{elseif $vid_disp.service == 4}>
+<script>
+    var ft_title = '<{$block.bt_ft_videotitle}>';
+    var ft_durationmin;
+    var ft_durationsec;
+    var ft_duration;
+    var ft_btduration = <{$block.bt_ft_duration}>;
+    var ft_author = '<{$block.bt_ft_videoauthor}>';
+    var ft_btpublished = '<{$block.bt_ft_published}>';
+    var ft_btpublisheddate;
+     
+    var ft_localViews = '<{$block.bt_ft_localviews}>';
+    var ft_submitter = '<{$block.bt_ft_submitter}>';
+    var ft_vsubmitdate = '<{$block.bt_ft_vsubmitdate}>';
+    
+    ft_btpublished = ft_btpublished.split("+");
+    ft_btpublisheddate = ft_btpublished[0];
+    
+    ft_durationmin = Math.floor(ft_btduration/60);
+    ft_durationsec = ft_btduration - (ft_durationmin*60);
+    ft_duration = ft_durationmin+' min '+ft_durationsec+' sec';
+
+    ft_title = cleanForJSFeatured(ft_title);
+
+    displayLessInfoFeatured();
+
+  function cleanForJSFeatured(text) {
+
+    var vtext =  text.split("\'").join("&#39;");
+    var vtext =  vtext.split("\"").join("&#34;");
+    return vtext; 
+  }
+
+  function displayMoreInfoFeatured() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayLessInfoFeatured();" style="font-size: 9pt;"><{$block.lang_displayless}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$block.lang_videotitle}>:</b>&nbsp;', ft_title, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_localviews}>:</b></td><td class="videoinfoeven" align=left>', ft_localViews, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_localsubmitter}>:</b></td><td class="videoinfoeven" align=left>', ft_submitter, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_duration}>:</b></td><td class="videoinfoeven" align=left>', ft_duration, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_submitdate}>:</b></td><td class="videoinfoeven" align=left>', ft_vsubmitdate, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_author}>:</b></td><td class="videoinfoeven" align=left>', ft_author, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_pubdate}>:</b></td><td class="videoinfoeven" align=left>', ft_btpublisheddate, '</td></tr>');
+    html.push('</table>');
+ 
+    document.getElementById("videodisplayfeatured").innerHTML = html.join("");
+  }
+
+  function displayLessInfoFeatured() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayMoreInfoFeatured();" style="font-size: 9pt;"><{$block.lang_displaymore}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$block.lang_videotitle}>:</b> ', ft_title, '</td></tr>');
+    html.push('</table>');
+    
+    document.getElementById("videodisplayfeatured").innerHTML = html.join("");
+  }    
+</script>
+
+<{elseif $vid_disp.service == 3}>
+<script>
+    var ft_title = '<{$block.mc_ft_videotitle}>';
+    var ft_durationmin;
+    var ft_durationsec;
+    var ft_duration;
+    var ft_mcduration = <{$block.mc_ft_duration}>;
+    var ft_author = '<{$block.mc_ft_videoauthor}>';
+    var ft_mcviews = '<{$block.mc_ft_videoviews}>';
+    var ft_mcpublished = '<{$block.mc_ft_published}>';
+    var ft_mcpublisheddate;
+     
+    var ft_localViews = '<{$block.mc_ft_localviews}>';
+    var ft_submitter = '<{$block.mc_ft_submitter}>';
+    var ft_vsubmitdate = '<{$block.mc_ft_vsubmitdate}>';
+    
+    ft_mcpublished = ft_mcpublished.split("+");
+    ft_mcpublisheddate = ft_mcpublished[0].substr(0,16);
+    
+    ft_durationmin = Math.floor(ft_mcduration/60);
+    ft_durationsec = ft_mcduration - (ft_durationmin*60);
+    ft_duration = ft_durationmin+' min '+ft_durationsec+' sec';
+
+    ft_title = cleanForJSFeatured(ft_title);
+
+    displayLessInfoFeatured();
+
+  function cleanForJSFeatured(text) {
+
+    var vtext =  text.split("\'").join("&#39;");
+    var vtext =  vtext.split("\"").join("&#34;");
+    return vtext; 
+  }
+
+  function displayMoreInfoFeatured() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayLessInfoFeatured();" style="font-size: 9pt;"><{$block.lang_displayless}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$block.lang_videotitle}>:</b> ', ft_title, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_localviews}>:</b></td><td class="videoinfoeven" align=left>', ft_localViews, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_localsubmitter}>:</b></td><td class="videoinfoeven" align=left>', ft_submitter, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_duration}>:</b></td><td class="videoinfoeven" align=left>', ft_duration, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_submitdate}>:</b></td><td class="videoinfoeven" align=left>', ft_vsubmitdate, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_totviews}>:</b></td><td class="videoinfoeven" align=left>', ft_mcviews, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_author}>:</b></td><td class="videoinfoeven" align=left>', ft_author, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_pubdate}>:</b></td><td class="videoinfoeven" align=left>', ft_mcpublisheddate, '</td></tr>');
+    html.push('</table>');
+ 
+    document.getElementById("videodisplayfeatured").innerHTML = html.join("");
+  }
+
+  function displayLessInfoFeatured() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayMoreInfoFeatured();" style="font-size: 9pt;"><{$block.lang_displaymore}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$block.lang_videotitle}>:</b> ', ft_title, '</td></tr>');
+    html.push('</table>');
+    
+    document.getElementById("videodisplayfeatured").innerHTML = html.join("");
+  }    
+</script>
+<{elseif $vid_disp.service == 2}>
+<script>
+    var ft_title = '<{$block.dm_ft_videotitle}>';
+    var ft_durationmin;
+    var ft_durationsec;
+    var ft_duration;
+    var ft_dmduration = <{$block.dm_ft_duration}>;
+    var ft_author = '<{$block.dm_ft_videoauthor}>';
+    var ft_dmviews = '<{$block.dm_ft_videoviews}>';
+    var ft_dmpublished = '<{$block.dm_ft_published}>';
+    var ft_dmpublisheddate;
+     
+    var ft_localViews = '<{$block.dm_ft_localviews}>';
+    var ft_submitter = '<{$block.dm_ft_submitter}>';
+    var ft_vsubmitdate = '<{$block.dm_ft_vsubmitdate}>';
+    
+    ft_dmpublished = ft_dmpublished.split("+");
+    ft_dmpublisheddate = ft_dmpublished[0].substr(0,16);
+    
+    ft_durationmin = Math.floor(ft_dmduration/60);
+    ft_durationsec = ft_dmduration - (ft_durationmin*60);
+    ft_duration = ft_durationmin+' min '+ft_durationsec+' sec';
+
+    ft_title = cleanForJSFeatured(ft_title);
+
+    displayLessInfoFeatured();
+
+  function cleanForJSFeatured(text) {
+
+    var vtext =  text.split("\'").join("&#39;");
+    var vtext =  vtext.split("\"").join("&#34;");
+    return vtext; 
+  }
+
+  function displayMoreInfoFeatured() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayLessInfoFeatured();" style="font-size: 9pt;"><{$block.lang_displayless}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$block.lang_videotitle}>:</b> ', ft_title, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_localviews}>:</b></td><td class="videoinfoeven" align=left>', ft_localViews, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_localsubmitter}>:</b></td><td class="videoinfoeven" align=left>', ft_submitter, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_duration}>:</b></td><td class="videoinfoeven" align=left>', ft_duration, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_submitdate}>:</b></td><td class="videoinfoeven" align=left>', ft_vsubmitdate, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_totviews}>:</b></td><td class="videoinfoeven" align=left>', ft_dmviews, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_author}>:</b></td><td class="videoinfoeven" align=left>', ft_author, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b<{$block.lang_pubdate}>:</b></td><td class="videoinfoeven" align=left>', ft_dmpublisheddate, '</td></tr>');
+    html.push('</table>');
+ 
+    document.getElementById("videodisplayfeatured").innerHTML = html.join("");
+  }
+
+  function displayLessInfoFeatured() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayMoreInfoFeatured();" style="font-size: 9pt;"><{$block.lang_displaymore}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$block.lang_videotitle}>:</b> ', ft_title, '</td></tr>');
+    html.push('</table>');
+    
+    document.getElementById("videodisplayfeatured").innerHTML = html.join("");
+  }    
+</script>
+<{else}>
+<script>
+    var ft_title;
+    var ft_youtubeduration;
+    var ft_durationmin;
+    var ft_durationsec;
+    var ft_duration;
+    var ft_author;
+    var ft_ytviews;
+    var ft_youtubepublished;
+    var ft_youtubepublisheddate;
+    var ft_localViews;
+    var ft_submitter;
+    var ft_vsubmitdate;
+
+  function cleanForJSFeatured(text) {
+
+    var vtext =  text.split("\'").join("&#39;");
+    var vtext =  vtext.split("\"").join("&#34;");
+    return vtext; 
+  }
+
+  function showVideoInfoFeatured(json) {
+
+    ft_title = cleanForJSFeatured(json.entry['media$group']['media$title'].$t);
+    ft_youtubeduration = json.entry['media$group']['yt$duration'].seconds;
+    ft_durationmin = Math.floor(ft_youtubeduration/60);
+    ft_durationsec = ft_youtubeduration - (ft_durationmin*60);
+    ft_duration = ft_durationmin+' min '+ft_durationsec+' sec';
+    ft_author = cleanForJSFeatured(json.entry['author'][0].name.$t);
+    ft_ytviews = json.entry['yt$statistics'].viewCount;
+    ft_youtubepublished = json.entry.published.$t;
+    ft_youtubepublished = ft_youtubepublished.split("T");
+    ft_youtubepublisheddate = ft_youtubepublished[0];
+  
+    ft_localViews = '<{$vid_disp.views}>';
+    ft_submitter = cleanForJSFeatured('<{$vid_disp.submitter}>');
+    ft_vsubmitdate = '<{$vid_disp.date}>';
+    
+    displayLessInfoFeatured();
+  }
+
+  function displayMoreInfoFeatured() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayLessInfoFeatured();" style="font-size: 9pt;"><{$block.lang_displayless}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$block.lang_videotitle}>:</b> ', ft_title, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_localviews}>:</b></td><td class="videoinfoeven" align=left>', ft_localViews, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_localsubmitter}>:</b></td><td class="videoinfoeven" align=left>', ft_submitter, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_duration}>:</b></td><td class="videoinfoeven" align=left>', ft_duration, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_submitdate}>:</b></td><td class="videoinfoeven" align=left>', ft_vsubmitdate, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_totviews}>:</b></td><td class="videoinfoeven" align=left>', ft_ytviews, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_author}>:</b></td><td class="videoinfoeven" align=left>', ft_author, '</td></tr>');
+    html.push('<tr><td class="videoinfoodd" align=left><b><{$block.lang_pubdate}>:</b></td><td class="videoinfoeven" align=left>', ft_youtubepublisheddate, '</td></tr>');
+    html.push('</table>');
+ 
+    document.getElementById("videodisplayfeatured").innerHTML = html.join("");
+  }
+
+  function displayLessInfoFeatured() {
+
+    var html=[''];
+    html.push('<table class="videoinfotable">');
+    html.push('<tr><td class="videoinfobutton" colspan=5 align="center"><button onClick="javascript:displayMoreInfoFeatured();" style="font-size: 9pt;"><{$block.lang_displaymore}></button></td></tr>');
+    html.push('<tr><td class="videoinfohead" align=left colspan=5><b><{$block.lang_videotitle}>:</b> ', ft_title, '</td></tr>');
+    html.push('</table>');
+    
+    document.getElementById("videodisplayfeatured").innerHTML = html.join("");
+  }
+
+</script>
+<script src="http://gdata.youtube.com/feeds/api/videos/<{$vid_disp.pcode}>?alt=json-in-script&callback=showVideoInfoFeatured">
+</script>
+<{/if}>

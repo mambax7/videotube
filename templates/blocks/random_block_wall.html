@@ -1,0 +1,51 @@
+<style type='text/css' media='all'>
+  @import url(<{$block.videocss}>);
+</style>
+
+<script type="text/javascript">
+function randommousOverImage(name,id,nr){
+  if(name)
+    imname = name;
+  imname.src = "http://img.youtube.com/vi/"+id+"/"+nr+".jpg";
+  nr++;
+  if(nr > 3)
+    nr = 1;
+  timer =  setTimeout("randommousOverImage(false,'"+id+"',"+nr+");",1000);
+}
+
+function randommouseOutImage(name){
+  if(name)
+    imname = name;
+  if(timer)
+    clearTimeout(timer)
+}
+
+</script>
+
+<div align="center">
+<div style="display: block; width: <{$block.tablewidth}>px;">
+<table class="videowalltable" cols="<{$block.matrixsize}>">
+	<tr>
+	<{foreach item=vid_disp from=$block.vp_vid_disp}>
+		<td align="center" valign="middle" width="<{$block.tdwidth}>px">
+			<a href="<{$xoops_url}>/modules/videotube/index.php?vid=<{$vid_disp.id}>">
+    		<{if $vid_disp.service > 1}>
+              <{if $vid_disp.thumb}>
+                <img src="<{$vid_disp.thumb}>" width="75" alt="<{$vid_disp.title}>" style="border: 1px solid #cccccc"></a>
+              <{else}>
+                <img src="<{$xoops_url}>/modules/videotube/images/defaultthumb.jpg" width="75" alt="<{$vid_disp.title}>" style="border: 1px solid #cccccc"></a>
+              <{/if}>
+    		<{else}>
+    		  <img src="http://img.youtube.com/vi/<{$vid_disp.code}>/default.jpg" width="75" alt="<{$vid_disp.title}>" style="border: 1px solid #cccccc" onmouseout="randommouseOutImage(this)" onmouseover="randommousOverImage(this,'<{$vid_disp.code}>',2)"></a>
+		    <{/if}>
+		</td>
+		<{if !($vid_disp.vordtag)}>
+		  </tr>
+		  <{if ($vid_disp.vord < $block.numvideos)}>
+		    <tr>
+		  <{/if}>
+	    <{/if}>
+	<{/foreach}>
+</table>
+</div>
+</div>

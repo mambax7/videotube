@@ -1,0 +1,67 @@
+<{if ($vpagemenuenable)}>
+  <{$video_pagemenu}>
+<{/if}>
+<div align="center">
+	<font face="arial" size="3"><b><{$listtitle}></b></font><br />
+	<font face="arial" size="1">(<{$listinstructions}>)</font><br />
+	<br />
+	<font face="arial" size="1">
+	<table align ="center" width="100%" cellspacing="1" cellpadding="5" border="0" cols="6">
+		<tr>
+		<td class="even" align="center" width="10%">&nbsp;</td>
+		<td class="even" align="left" width="20%"><b><{$column1label}></b> 
+		<a href="<{$xoops_url}>/modules/videotube/userfeatures.php?op=viewuserlist&displayorder=1">&#9650;</a> 
+		<a href="<{$xoops_url}>/modules/videotube/userfeatures.php?op=viewuserlist&displayorder=2">&#9660;</a></td>
+		<td class="even" align="right" width="15%">
+		<a href="<{$xoops_url}>/modules/videotube/userfeatures.php?op=viewuserlist&displayorder=3">&#9650;</a> 
+		<a href="<{$xoops_url}>/modules/videotube/userfeatures.php?op=viewuserlist&displayorder=4">&#9660;</a><b><{$column2label}></b></td>
+		<td class="even" align="right" width="15%">
+		<a href="<{$xoops_url}>/modules/videotube/userfeatures.php?op=viewuserlist&displayorder=5">&#9650;</a> 
+		<a href="<{$xoops_url}>/modules/videotube/userfeatures.php?op=viewuserlist&displayorder=6">&#9660;</a><b><{$column3label}></b></td>
+		<td class="even" align="left" width="30%"> 
+		<a href="<{$xoops_url}>/modules/videotube/userfeatures.php?op=viewuserlist&displayorder=7">&#9650;</a> 
+		<a href="<{$xoops_url}>/modules/videotube/userfeatures.php?op=viewuserlist&displayorder=8">&#9660;</a><b><{$column4label}></b></td>
+		<td align="center" width="5%">&nbsp;</td>
+		</tr>
+	<{foreach item=userlist from=$userlist}>
+		<tr>
+		<{if ($i++%2)}>
+			<td class="even" align="center" valign="middle" width="10%">
+			<{if ($userlist.showavatar)}>
+			   <img src="<{$xoops_url}>/uploads/<{$userlist.avatar}>" width="40" height="40"></td>
+			<{else}>
+			   &nbsp;</td>
+			<{/if}>
+			<td class="even" align="left" valign="middle" width="10%">
+			<{if ($userlist.videos > 0)}>
+			   <a href="<{$xoops_url}>/modules/videotube/index.php?op=viewbyuser&sid=<{$userlist.uid}>"><{$userlist.name}></a></td>
+			<{else}>
+			   <{$userlist.name}></td>
+			<{/if}>
+			<td class="even" align="right" valign="middle" width="15%"><{$userlist.videos}></td>
+			<td class="even" align="right" valign="middle" width="15%"><{$userlist.views}></td>
+			<td class="even" align="left" valign="middle" width="25%"><{$userlist.lastupdate}></td>
+			<td align="center" width="5%">&nbsp;</td>
+		<{else}>
+			<td class="odd" align="center" valign="middle" width="10%">
+			<{if ($userlist.showavatar)}>
+			   <img src="<{$xoops_url}>/uploads/<{$userlist.avatar}>" width="40" height="40"></td>
+			<{else}>
+			   &nbsp;</td>
+			<{/if}>
+			<td class="odd" align="left" valign="middle" width="10%">
+			<{if ($userlist.videos > 0)}>
+			   <a href="<{$xoops_url}>/modules/videotube/index.php?op=viewbyuser&sid=<{$userlist.uid}>"><{$userlist.name}></a></td>
+			<{else}>
+			   <{$userlist.name}></td>
+			<{/if}>
+			<td class="odd" align="right" valign="middle" width="15%"><{$userlist.videos}></td>
+			<td class="odd" align="right" valign="middle" width="15%"><{$userlist.views}></td>
+			<td class="odd" align="left" valign="middle" width="25%"><{$userlist.lastupdate}></td>
+			<td align="center" width="5%">&nbsp;</td>		
+		<{/if}>
+		</tr>
+	<{/foreach}>
+	</table>
+</div>
+
